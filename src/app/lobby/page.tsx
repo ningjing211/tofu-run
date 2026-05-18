@@ -1,41 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { useLobbyList } from "@/hooks/useLobbyList";
 import { useStoredGoingAccount } from "@/hooks/useStoredGoingAccount";
-import type { GoingJoinListEntry } from "@/types/database";
 
 export default function LobbyPage() {
-  const [signups, setSignups] = useState<GoingJoinListEntry[]>([]);
-  const [count, setCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { signups, count, loading, refreshing, error, reload } = useLobbyList();
   const { account: me } = useStoredGoingAccount();
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/lobby", { cache: "no-store" });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setSignups(data.signups ?? []);
-      setCount(data.count ?? 0);
-      setError(null);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "載入失敗");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load();
-    const interval = setInterval(load, 30000);
-    return () => clearInterval(interval);
-  }, [load]);
+  const showEmpty = !loading && !error && signups.length === 0;
+  const showList = signups.length > 0;
 
   return (
     <PageShell>
@@ -73,15 +50,19 @@ export default function LobbyPage() {
           <div>
             <h2 className="font-semibold text-brown-sugar">想參加的人</h2>
             <p className="text-xs text-brown-sugar/50">
-              共 {loading ? "…" : count} 人
+              共 {loading && count === 0 ? "…" : count} 人
+              {refreshing && (
+                <span className="ml-1.5 text-brown-sugar/40">更新中</span>
+              )}
             </p>
           </div>
           <button
             type="button"
-            onClick={load}
-            className="text-xs text-brown-sugar/60 underline"
+            onClick={() => void reload()}
+            disabled={refreshing}
+            className="text-xs text-brown-sugar/60 underline disabled:opacity-40"
           >
-            重新整理
+            {refreshing ? "更新中…" : "重新整理"}
           </button>
         </div>
 
@@ -91,17 +72,23 @@ export default function LobbyPage() {
           </p>
         )}
 
-        {error && (
+        {error && !showList && (
           <p className="py-4 text-center text-sm text-red-bean">{error}</p>
         )}
 
-        {!loading && !error && signups.length === 0 && (
+        {error && showList && (
+          <p className="mb-2 text-center text-xs text-red-bean/80">
+            更新失敗，顯示的是上次資料
+          </p>
+        )}
+
+        {showEmpty && (
           <p className="py-8 text-center text-sm text-brown-sugar/60">
             還沒有人報名，成為第一碗豆花吧 🥣
           </p>
         )}
 
-        {!loading && signups.length > 0 && (
+        {showList && (
           <ul className="divide-y divide-brown-sugar/8">
             {signups.map((s) => {
               const isMe = me?.runnerId === s.runner_id;
