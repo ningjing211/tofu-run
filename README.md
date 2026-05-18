@@ -84,3 +84,4 @@ npm run dev
 - `user_sessions` — 玩家參加場次 + 豆花類型
 - `tokens` — Checkpoint 掃描紀錄
 # tofu-run
+# tofu-run
