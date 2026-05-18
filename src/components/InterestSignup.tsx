@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ToppingPicker } from "@/components/ToppingPicker";
@@ -32,6 +33,35 @@ export function InterestSignup() {
     "idle"
   );
   const [error, setError] = useState<string | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const prevIntentRef = useRef<Intent | null>(null);
+
+  function scrollSignupIntoView() {
+    const el = rootRef.current;
+    if (!el) return;
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  useEffect(() => {
+    if (intent && !prevIntentRef.current) {
+      scrollSignupIntoView();
+    }
+    prevIntentRef.current = intent;
+  }, [intent]);
+
+  useEffect(() => {
+    if (status !== "success") return;
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(scrollSignupIntoView);
+    });
+  }, [status]);
 
   async function openForm(selected: Intent) {
     setError(null);
@@ -136,50 +166,79 @@ export function InterestSignup() {
 
   if (status === "success") {
     return (
-      <Card className="mb-5 border-2 border-mung-green/25 bg-gradient-to-br from-mung-green/10 to-tofu-white text-center">
-        <p className="text-3xl">🥣</p>
-        <h2 className="mt-2 text-lg font-semibold text-brown-sugar">收到了！</h2>
-        {intent === "join" && runnerId && (
-          <p className="mt-2 text-sm text-twilight">
-            <span className="font-mono">{runnerId.trim().toUpperCase()}</span>
-            {displayName && (
-              <span className="ml-2 font-medium text-brown-sugar">
-                {displayName}
-              </span>
-            )}
+      <div
+        id="interest-signup"
+        ref={rootRef}
+        className="scroll-mt-6 mb-5"
+      >
+        <Card className="border-2 border-mung-green/30 bg-gradient-to-br from-mung-green/12 to-tofu-white text-center shadow-md shadow-mung-green/10">
+          <p className="text-4xl animate-float">🥣</p>
+          <h2 className="mt-3 text-xl font-bold text-brown-sugar">報名成功</h2>
+          <p className="mt-1 text-xs text-mung-green/90">已收到你的資料</p>
+
+          {intent === "join" && runnerId && (
+            <div className="mt-4 rounded-2xl bg-cream/90 px-4 py-3">
+              <p className="font-mono text-base font-semibold text-twilight">
+                {runnerId.trim().toUpperCase()}
+              </p>
+              {displayName && (
+                <p className="mt-1 text-sm font-medium text-brown-sugar">
+                  {displayName}
+                </p>
+              )}
+            </div>
+          )}
+
+          {successGoal && (
+            <p className="mt-3 rounded-xl border border-mung-green/15 bg-mung-green/5 px-4 py-2.5 text-base font-semibold text-brown-sugar">
+              目標：{successGoal}
+            </p>
+          )}
+
+          <p className="mt-4 text-sm leading-relaxed text-brown-sugar/75">
+            活動消息會寄到你的信箱或 Line，到時候中央公園見。
           </p>
-        )}
-        {successGoal && (
-          <p className="mt-3 rounded-xl bg-cream/80 px-4 py-2 text-base font-semibold text-brown-sugar">
-            目標：{successGoal}
-          </p>
-        )}
-        <p className="mt-2 text-sm leading-relaxed text-brown-sugar/75">
-          謝謝你留下聯絡方式。
-          <br />
-          活動消息會寄到你的信箱或 Line，到時候中央公園見。
-        </p>
-        {intent === "join" && (
-          <a
-            href="/passport"
-            className="mt-5 inline-block rounded-2xl bg-brown-sugar px-6 py-3 text-sm font-medium text-cream"
+
+          {intent === "join" ? (
+            <div className="mt-5 flex flex-col gap-2">
+              <Link
+                href="/passport"
+                className="flex-1 rounded-2xl bg-brown-sugar px-4 py-3.5 text-center text-sm font-medium text-cream shadow-md shadow-brown-sugar/15 transition-transform active:scale-[0.98]"
+              >
+                查看我的護照
+              </Link>
+              <Link
+                href="/lobby"
+                className="flex-1 rounded-2xl border-2 border-brown-sugar/20 bg-cream px-4 py-3.5 text-center text-sm font-medium text-brown-sugar transition-colors hover:border-brown-sugar/35 active:scale-[0.98]"
+              >
+                想參加名單
+              </Link>
+            </div>
+          ) : (
+            <p className="mt-4 text-xs text-brown-sugar/55">
+              我們會在活動確定時優先通知你。
+            </p>
+          )}
+
+          <button
+            type="button"
+            onClick={closeForm}
+            className="mt-4 text-xs text-brown-sugar/45 underline-offset-2 hover:text-brown-sugar/65 hover:underline"
           >
-            查看我的護照
-          </a>
-        )}
-        <button
-          type="button"
-          onClick={closeForm}
-          className="mt-3 block w-full text-xs text-brown-sugar/50 underline"
-        >
-          關閉
-        </button>
-      </Card>
+            關閉，繼續瀏覽
+          </button>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="mb-5 overflow-hidden border-2 border-brown-sugar/10 bg-gradient-to-br from-cream to-tofu-white">
+    <div
+      id="interest-signup"
+      ref={rootRef}
+      className="scroll-mt-6 mb-5"
+    >
+    <Card className="overflow-hidden border-2 border-brown-sugar/10 bg-gradient-to-br from-cream to-tofu-white">
       <p className="text-center text-xs font-medium tracking-wide text-sunset">
         活動預告
       </p>
@@ -346,5 +405,6 @@ export function InterestSignup() {
         </form>
       )}
     </Card>
+    </div>
   );
 }

@@ -81,16 +81,16 @@ export default function HomePage() {
         </ul>
       </Card>
 
-      <div className="space-y-3 pb-4">
+      <div className="space-y-3 border-t border-brown-sugar/10 pt-6 pb-4">
+        <p className="text-center text-xs font-medium text-brown-sugar/55">
+          已報名？
+        </p>
         <Button href="/passport" variant="secondary" className="w-full">
           我的護照（登入）
         </Button>
-        <Button href="/lobby" className="w-full">
+        <Button href="/lobby" variant="secondary" className="w-full">
           查看想參加名單
         </Button>
-        <p className="text-center text-[11px] text-brown-sugar/50">
-          活動日確定前，可在 Lobby 看已報名的人數
-        </p>
       </div>
     </PageShell>
   );
