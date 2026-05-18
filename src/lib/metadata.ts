@@ -62,9 +62,10 @@ export function createMetadata({
       images: [
         {
           url: ogImage,
+          secureUrl: ogImage.startsWith("https") ? ogImage : undefined,
           width: 1200,
           height: 630,
-          alt: `${siteConfig.name} — 慢跑 RUN`,
+          alt: siteConfig.ogImageAlt,
           type: "image/jpeg",
         },
       ],
@@ -73,7 +74,10 @@ export function createMetadata({
       card: "summary_large_image",
       title: pageTitle,
       description,
-      images: [ogImage],
+      images: {
+        url: ogImage,
+        alt: siteConfig.ogImageAlt,
+      },
     },
     other: {
       "geo.region": siteConfig.country,

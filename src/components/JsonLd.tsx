@@ -10,7 +10,7 @@ export function JsonLd() {
         url: absoluteUrl("/"),
         name: siteConfig.name,
         alternateName: siteConfig.nameEn,
-        description: siteConfig.description,
+        description: siteConfig.shortDescription,
         inLanguage: "zh-Hant",
         publisher: { "@id": `${absoluteUrl("/")}#organization` },
       },
@@ -25,7 +25,7 @@ export function JsonLd() {
         "@type": "SportsEvent",
         "@id": `${absoluteUrl("/")}#event`,
         name: siteConfig.name,
-        description: siteConfig.description,
+        description: siteConfig.shortDescription,
         eventAttendanceMode:
           "https://schema.org/OfflineEventAttendanceMode",
         eventStatus: "https://schema.org/EventScheduled",
