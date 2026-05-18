@@ -240,8 +240,8 @@ export default function PassportPage() {
       )}
 
       {!hasJoinedToday && signup && !loading && (
-        <Button href="/join" className="mb-4 w-full">
-          進入今日活動（現場加入）
+        <Button href="/lobby" className="mb-4 w-full">
+          查看想參加名單
         </Button>
       )}
 

@@ -21,6 +21,7 @@ export default function LobbyPage() {
         <h1 className="text-2xl font-bold text-brown-sugar">想參加名單…</h1>
         <p className="mt-2 text-sm leading-relaxed text-brown-sugar/65">
           尚未加入今日活動。請先點選想參加、完成登入護照，再期待到現場加入。
+          <br />
         </p>
         {me && (
           <p className="mt-2 text-sm text-twilight">
@@ -126,6 +127,9 @@ export default function LobbyPage() {
           </ul>
         )}
       </Card>
+      <br />
+      <p className="text-xs font-bold text-brown-sugar/60">開跑日期稍候公佈...</p>
+
 
       <div className="mt-5 space-y-3">
         <Button href="/passport" variant="secondary" className="w-full">
