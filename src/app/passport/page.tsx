@@ -20,7 +20,8 @@ import {
   getPassportCache,
   setPassportCache,
 } from "@/lib/passportCache";
-import { clearStoredPlayer, getStoredPlayer } from "@/lib/player";
+import { useStoredPlayerSnapshot } from "@/hooks/useStoredPlayer";
+import { clearStoredPlayer } from "@/lib/player";
 import {
   formatDisplayDate,
   formatDurationMinutes,
@@ -108,7 +109,7 @@ export default function PassportPage() {
     setError(null);
   }
 
-  const player = getStoredPlayer();
+  const { player } = useStoredPlayerSnapshot();
   const hasJoinedToday =
     player && sessionRunnerId && player.runnerId === sessionRunnerId;
 

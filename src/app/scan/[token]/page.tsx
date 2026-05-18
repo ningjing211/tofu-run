@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { TokenIcon } from "@/components/TokenIcon";
 import { TOKEN_TYPES, getTokenLabel } from "@/lib/constants";
 import { getCurrentPosition } from "@/lib/geolocation";
-import { getStoredPlayer } from "@/lib/player";
+import { useStoredPlayerSnapshot } from "@/hooks/useStoredPlayer";
 
 const VALID = TOKEN_TYPES.map((t) => t.id);
 
@@ -20,7 +20,7 @@ export default function ScanPage({
   const { token } = use(params);
   const tokenType = token.toLowerCase();
   const tokenInfo = TOKEN_TYPES.find((t) => t.id === tokenType);
-  const player = getStoredPlayer();
+  const { player } = useStoredPlayerSnapshot();
 
   const [status, setStatus] = useState<
     "idle" | "scanning" | "success" | "error"

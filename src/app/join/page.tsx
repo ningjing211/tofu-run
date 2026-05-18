@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { getStoredGoingAccount } from "@/lib/goingAccount";
+import { useStoredGoingAccount } from "@/hooks/useStoredGoingAccount";
 import { usePlayer } from "@/hooks/usePlayer";
 
 export default function JoinPage() {
   const router = useRouter();
-  const going = getStoredGoingAccount();
+  const { account: going, mounted } = useStoredGoingAccount();
   const { player, loading, join } = usePlayer();
   const [status, setStatus] = useState<"idle" | "joining" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +41,16 @@ export default function JoinPage() {
       setStatus("error");
       setError(e instanceof Error ? e.message : "加入失敗");
     }
+  }
+
+  if (!mounted) {
+    return (
+      <PageShell showNav={false}>
+        <div className="flex min-h-[70dvh] items-center justify-center">
+          <p className="animate-pulse-soft text-brown-sugar/60">載入中…</p>
+        </div>
+      </PageShell>
+    );
   }
 
   if (!going?.runnerId) {

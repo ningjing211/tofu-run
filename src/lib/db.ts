@@ -2,6 +2,7 @@ import { createSupabaseClient, createSupabaseServiceClient } from "@/lib/supabas
 import { getTodayDateString } from "@/lib/session";
 import { collectTargetsFromSignup } from "@/lib/toppings";
 import type {
+  GoingJoinListEntry,
   GoingSignup,
   LobbyPlayer,
   PassportAccount,
@@ -96,6 +97,20 @@ export async function getGoingSignupByRunnerId(
 export async function hasGoingJoinSignup(runnerId: string): Promise<boolean> {
   const row = await getGoingSignupByRunnerId(runnerId);
   return row !== null;
+}
+
+/** Lobby：列出所有「想參加」報名（活動日前預熱用） */
+export async function getGoingJoinList(): Promise<GoingJoinListEntry[]> {
+  const supabase = createSupabaseServiceClient();
+  const { data, error } = await supabase
+    .from("going_signups")
+    .select("id, runner_id, nickname, runner_name, goal, created_at")
+    .eq("intent", "join")
+    .not("runner_id", "is", null)
+    .order("created_at", { ascending: true });
+
+  if (error) throw error;
+  return (data ?? []) as GoingJoinListEntry[];
 }
 
 export async function insertGoingSignup(row: {

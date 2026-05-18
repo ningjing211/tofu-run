@@ -41,6 +41,16 @@ export type LobbyPlayer = {
   joined_at: string;
 };
 
+/** Lobby 想參加名單（going_signups） */
+export type GoingJoinListEntry = {
+  id: string;
+  runner_id: string;
+  nickname: string | null;
+  runner_name: string | null;
+  goal: string | null;
+  created_at: string;
+};
+
 export type PassportRun = {
   session_date: string;
   tofu_type: string | null;

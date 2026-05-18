@@ -5,26 +5,24 @@ import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { getTofuLabel } from "@/lib/constants";
-import { getStoredPlayer } from "@/lib/player";
-import { formatDisplayDate } from "@/lib/session";
-import type { LobbyPlayer } from "@/types/database";
+import { useStoredGoingAccount } from "@/hooks/useStoredGoingAccount";
+import type { GoingJoinListEntry } from "@/types/database";
 
 export default function LobbyPage() {
-  const [players, setPlayers] = useState<LobbyPlayer[]>([]);
-  const [sessionDate, setSessionDate] = useState("");
+  const [signups, setSignups] = useState<GoingJoinListEntry[]>([]);
+  const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const me = getStoredPlayer();
+  const { account: me } = useStoredGoingAccount();
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/lobby");
+      const res = await fetch("/api/lobby", { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setPlayers(data.players);
-      setSessionDate(data.sessionDate);
+      setSignups(data.signups ?? []);
+      setCount(data.count ?? 0);
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "載入失敗");
@@ -35,41 +33,49 @@ export default function LobbyPage() {
 
   useEffect(() => {
     load();
-    const interval = setInterval(load, 15000);
+    const interval = setInterval(load, 30000);
     return () => clearInterval(interval);
   }, [load]);
 
   return (
     <PageShell>
       <header className="mb-6">
-        <p className="text-xs text-brown-sugar/60">今日 Lobby</p>
-        <h1 className="text-2xl font-bold text-brown-sugar">
-          {sessionDate ? formatDisplayDate(sessionDate) : "載入中…"}
-        </h1>
+        <p className="text-xs text-brown-sugar/60">Lobby即將開始的活動</p>
+        <h1 className="text-2xl font-bold text-brown-sugar">想參加名單…</h1>
+        <p className="mt-2 text-sm leading-relaxed text-brown-sugar/65">
+          尚未加入今日活動。請先點選想參加、完成登入護照，再期待到現場加入。
+        </p>
         {me && (
-          <p className="mt-1 text-sm text-twilight">
-            你：{me.runnerName} · {me.runnerId}
+          <p className="mt-2 text-sm text-twilight">
+            你已登入：{me.runnerId}
           </p>
         )}
       </header>
 
       {!me && (
-        <Card className="mb-4 border-sunset/40">
-          <p className="text-sm text-brown-sugar/80">
-            尚未加入今日活動。請先完成想參加、登入護照，再到現場加入。
+        <Card className="mb-4 border-sunset/30 bg-sunset/5">
+          <p className="text-sm leading-relaxed text-brown-sugar/80">
+            請先點選想參加、完成登入護照，再期待到現場加入。
           </p>
-          <Button href="/passport" variant="secondary" className="mt-3 w-full">
-            護照登入
-          </Button>
-          <Button href="/join" className="mt-2 w-full">
-            進入今日活動
-          </Button>
+          <div className="mt-3 flex gap-2">
+            <Button href="/" variant="secondary" className="flex-1">
+              回首頁報名
+            </Button>
+            <Button href="/passport" className="flex-1">
+              護照登入
+            </Button>
+          </div>
         </Card>
       )}
 
       <Card>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-semibold">今日參加者</h2>
+          <div>
+            <h2 className="font-semibold text-brown-sugar">想參加的人</h2>
+            <p className="text-xs text-brown-sugar/50">
+              共 {loading ? "…" : count} 人
+            </p>
+          </div>
           <button
             type="button"
             onClick={load}
@@ -89,50 +95,48 @@ export default function LobbyPage() {
           <p className="py-4 text-center text-sm text-red-bean">{error}</p>
         )}
 
-        {!loading && !error && players.length === 0 && (
+        {!loading && !error && signups.length === 0 && (
           <p className="py-8 text-center text-sm text-brown-sugar/60">
-            還沒有人加入，成為第一碗豆花吧 🥣
+            還沒有人報名，成為第一碗豆花吧 🥣
           </p>
         )}
 
-        {!loading && players.length > 0 && (
-          <div className="overflow-hidden rounded-2xl border border-brown-sugar/10">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-cream/80 text-left text-xs text-brown-sugar/60">
-                  <th className="px-3 py-2 font-medium">玩家</th>
-                  <th className="px-3 py-2 font-medium">ID</th>
-                  <th className="px-3 py-2 font-medium">豆花</th>
-                </tr>
-              </thead>
-              <tbody>
-                {players.map((p) => (
-                  <tr
-                    key={p.user_id}
-                    className={`border-t border-brown-sugar/5 ${
-                      me?.userId === p.user_id ? "bg-sunset/10" : ""
-                    }`}
-                  >
-                    <td className="px-3 py-3 font-medium">{p.runner_name}</td>
-                    <td className="px-3 py-3 font-mono text-xs text-twilight">
-                      {p.runner_id}
-                    </td>
-                    <td className="px-3 py-3">
-                      {p.tofu_type ? (
-                        <span className="rounded-full bg-tofu-white px-2 py-0.5 text-xs">
-                          {getTofuLabel(p.tofu_type).replace("豆花", "")}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-brown-sugar/40">
-                          等待分配
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {!loading && signups.length > 0 && (
+          <ul className="divide-y divide-brown-sugar/8">
+            {signups.map((s) => {
+              const isMe = me?.runnerId === s.runner_id;
+              const displayName =
+                s.nickname?.trim() || s.runner_name?.trim() || "—";
+
+              return (
+                <li
+                  key={s.id}
+                  className={`flex items-center justify-between gap-3 py-3 ${
+                    isMe ? "bg-sunset/10 -mx-1 rounded-xl px-1" : ""
+                  }`}
+                >
+                  <div className="min-w-0">
+                    <p className="font-mono text-sm font-semibold text-twilight">
+                      {s.runner_id}
+                    </p>
+                    <p className="truncate text-sm text-brown-sugar">
+                      {displayName}
+                    </p>
+                    {s.goal && (
+                      <p className="mt-0.5 truncate text-xs text-mung-green">
+                        {s.goal}
+                      </p>
+                    )}
+                  </div>
+                  {isMe && (
+                    <span className="shrink-0 rounded-full bg-sunset/20 px-2 py-0.5 text-[10px] font-medium text-brown-sugar">
+                      你
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         )}
       </Card>
 

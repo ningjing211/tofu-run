@@ -86,10 +86,10 @@ export default function HomePage() {
           我的護照（登入）
         </Button>
         <Button href="/lobby" className="w-full">
-          進入今日 Lobby
+          查看想參加名單
         </Button>
         <p className="text-center text-[11px] text-brown-sugar/50">
-          須先完成「想參加」並於護照登入；現場加入後可進 Lobby
+          活動日確定前，可在 Lobby 看已報名的人數
         </p>
       </div>
     </PageShell>

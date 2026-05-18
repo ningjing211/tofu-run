@@ -1,28 +1,36 @@
 import { NextResponse } from "next/server";
-import { getLobbyPlayers, getOrCreateTodaySession } from "@/lib/db";
-import { isSupabaseConfigured } from "@/lib/supabase";
+import { getGoingJoinList } from "@/lib/db";
+import {
+  isSupabaseConfigured,
+  isSupabaseServiceConfigured,
+} from "@/lib/supabase";
 
 export async function GET() {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured() || !isSupabaseServiceConfigured()) {
     return NextResponse.json(
-      { error: "Supabase 尚未設定" },
+      { error: "Supabase 尚未設定完整" },
       { status: 503 }
     );
   }
 
   try {
-    const session = await getOrCreateTodaySession();
-    const players = await getLobbyPlayers(session.id);
+    const signups = await getGoingJoinList();
 
-    return NextResponse.json({
-      sessionDate: session.date,
-      sessionId: session.id,
-      players,
-    });
+    return NextResponse.json(
+      {
+        count: signups.length,
+        signups,
+      },
+      {
+        headers: {
+          "Cache-Control": "private, max-age=30, stale-while-revalidate=60",
+        },
+      }
+    );
   } catch (e) {
     console.error(e);
     return NextResponse.json(
-      { error: "讀取 Lobby 失敗" },
+      { error: "讀取名單失敗" },
       { status: 500 }
     );
   }
