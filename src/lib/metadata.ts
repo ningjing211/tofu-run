@@ -40,6 +40,15 @@ export function createMetadata({
     alternates: {
       canonical,
     },
+    icons: {
+      icon: [
+        { url: siteConfig.appIcon, sizes: "512x512", type: "image/jpeg" },
+        { url: "/icon.svg", type: "image/svg+xml" },
+      ],
+      apple: [
+        { url: siteConfig.appIcon, sizes: "512x512", type: "image/jpeg" },
+      ],
+    },
     robots: noIndex
       ? { index: false, follow: false }
       : {
@@ -82,6 +91,7 @@ export function createMetadata({
     other: {
       "geo.region": siteConfig.country,
       "geo.placename": siteConfig.location,
+      "apple-mobile-web-app-title": siteConfig.name,
     },
   };
 }
