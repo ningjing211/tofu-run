@@ -5,7 +5,7 @@
 -- 若需重新匯入，先清除名額池（勿在已有活動資料時執行）
 -- delete from users where slot_no is not null;
 
-insert into users (slot_no, runner_id, runner_name, claimed_at)
+insert into users (slot_no, runner_id, runner_name)
 values
   (1, 'DOG-214', '微糖企鵝'),
   (2, 'BEA-242', '宇宙夢幻火箭'),

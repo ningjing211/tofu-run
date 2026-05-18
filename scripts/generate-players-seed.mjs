@@ -33,7 +33,7 @@ const sql = `-- 豆花慢跑：300 名預先建立玩家名額
 -- 若需重新匯入，先清除名額池（勿在已有活動資料時執行）
 -- delete from users where slot_no is not null;
 
-insert into users (slot_no, runner_id, runner_name, claimed_at)
+insert into users (slot_no, runner_id, runner_name)
 values
 ${values.join(",\n")}
 on conflict (runner_id) do update set
