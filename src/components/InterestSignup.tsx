@@ -290,10 +290,14 @@ export function InterestSignup() {
           </button>
           <button
             type="button"
-            onClick={() => openForm("interested")}
-            className="flex-1 rounded-2xl border-2 border-brown-sugar/20 bg-cream px-4 py-3.5 text-sm font-medium text-brown-sugar transition-colors hover:border-brown-sugar/35 active:scale-[0.98]"
+            disabled
+            aria-disabled="true"
+            title="功能規劃中，暫時無法使用"
+            className="flex-1 cursor-not-allowed rounded-2xl border-2 border-brown-sugar/15 bg-cream/70 px-4 py-3.5 text-sm font-medium text-brown-sugar/40 opacity-60"
           >
-            有興趣
+            <span className="line-through decoration-brown-sugar/50">
+              有興趣
+            </span>
           </button>
           </div>
         </div>
