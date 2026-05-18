@@ -114,8 +114,8 @@ export type TokenTypeId = (typeof TOKEN_TYPES)[number]["id"];
 export const STORAGE_KEY = "tofu-run-player";
 
 export const GATHERING_SLOTS = [
-  { time: "星期一 7:00 PM", mood: "夏夜晚風" },
-  { time: "星期四 6:00 PM", mood: "璀璨夕陽" },
+  { time: "週一 7:00 PM", mood: "夏夜晚風" },
+  { time: "週四 6:00 PM", mood: "璀璨夕陽" },
 ] as const;
 
 export function getTofuLabel(id: string | null | undefined): string {

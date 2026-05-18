@@ -23,10 +23,13 @@ import {
 import { useStoredPlayerSnapshot } from "@/hooks/useStoredPlayer";
 import { clearStoredPlayer } from "@/lib/player";
 import {
-  formatDisplayDate,
   formatDurationMinutes,
+  getTodayDateString,
 } from "@/lib/session";
-import type { PassportAccount } from "@/types/database";
+import { siteConfig } from "@/lib/site";
+import type { PassportAccount, PassportRun } from "@/types/database";
+
+const RECORD_EMPTY = "---";
 
 export default function PassportPage() {
   const [runnerIdInput, setRunnerIdInput] = useState("");
@@ -165,6 +168,21 @@ export default function PassportPage() {
   const tofuEmoji = (id: string | null) =>
     TOFU_TYPES.find((t) => t.id === id)?.emoji ?? "🥣";
 
+  const activityRuns: PassportRun[] =
+    !signup || loading
+      ? []
+      : account && account.runs.length > 0
+        ? account.runs
+        : [
+            {
+              session_date: getTodayDateString(),
+              tofu_type: null,
+              completed_at: null,
+              joined_at: "",
+              tokens: [],
+            },
+          ];
+
   return (
     <PageShell>
       <header className="mb-6 text-center">
@@ -241,57 +259,71 @@ export default function PassportPage() {
 
       {signup && !loading && (
         <div className="mb-4 space-y-2">
-          <Button href="/live" className="w-full">
-            進入 LIVE 房間
-          </Button>
+          {siteConfig.showLiveEntry && (
+            <Button href="/live" className="w-full">
+              進入 LIVE 房間
+            </Button>
+          )}
           <Button href="/lobby" variant="secondary" className="w-full">
             查看想參加名單
           </Button>
         </div>
       )}
 
-      {hasJoinedToday && (
+      {hasJoinedToday && siteConfig.showLiveEntry && (
         <p className="mb-4 text-center text-xs text-mung-green">
           今日已加入活動，可進 LIVE 或掃描 Token
         </p>
       )}
 
-      {account && account.runs.length > 0 && (
+      {signup && !loading && activityRuns.length > 0 && (
         <section className="space-y-4">
           <h2 className="text-sm font-semibold text-brown-sugar/70">
             活動紀錄
           </h2>
-          {account.runs.map((run) => {
+          {activityRuns.map((run) => {
             const duration =
               run.completed_at &&
               formatDurationMinutes(run.joined_at, run.completed_at);
 
             return (
               <Card
-                key={run.session_date + run.joined_at}
+                key={run.session_date + (run.joined_at || "placeholder")}
                 className="border-l-4 border-sunset/50"
               >
-                <p className="text-xs text-brown-sugar/50">
-                  {formatDisplayDate(run.session_date)}
+                <p className="text-lg font-semibold text-brown-sugar">
+                  獲得：
+                  {run.tofu_type ? (
+                    <>
+                      {tofuEmoji(run.tofu_type)}{" "}
+                      {getTofuLabel(run.tofu_type)}
+                    </>
+                  ) : (
+                    <span className="text-brown-sugar/50">{RECORD_EMPTY}</span>
+                  )}
                 </p>
-                {run.tofu_type && (
-                  <p className="mt-2 text-lg font-semibold">
-                    獲得：{tofuEmoji(run.tofu_type)}{" "}
-                    {getTofuLabel(run.tofu_type)}
-                  </p>
-                )}
-                {run.tokens.length > 0 && (
-                  <ul className="mt-2 space-y-1 text-sm">
-                    {run.tokens.map((t) => (
-                      <li key={t.id}>· {getTokenLabel(t.token_type)}</li>
-                    ))}
-                  </ul>
-                )}
-                {duration != null && (
-                  <p className="mt-2 text-sm text-mung-green">
-                    完成時間：{duration} 分鐘
-                  </p>
-                )}
+                <div className="mt-2 text-sm text-brown-sugar">
+                  <span className="text-brown-sugar/60">Token</span>
+                  {run.tokens.length > 0 ? (
+                    <ul className="mt-1 space-y-1">
+                      {run.tokens.map((t) => (
+                        <li key={t.id}>· {getTokenLabel(t.token_type)}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span className="ml-1 text-brown-sugar/50">
+                      {RECORD_EMPTY}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-2 text-sm text-mung-green">
+                  完成時間：
+                  {duration != null ? (
+                    `${duration} 分鐘`
+                  ) : (
+                    <span className="text-brown-sugar/50">{RECORD_EMPTY}</span>
+                  )}
+                </p>
               </Card>
             );
           })}
@@ -307,7 +339,7 @@ export default function PassportPage() {
         <button
           type="button"
           onClick={handleLogout}
-          className="block w-full text-center text-xs text-brown-sugar/50 underline"
+          className="block w-full cursor-pointer text-center text-xs text-brown-sugar/50 underline hover:text-brown-sugar/70"
         >
           登出護照
         </button>

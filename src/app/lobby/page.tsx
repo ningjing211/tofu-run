@@ -9,7 +9,7 @@ import { useStoredGoingAccount } from "@/hooks/useStoredGoingAccount";
 
 export default function LobbyPage() {
   const { signups, count, loading, refreshing, error, reload } = useLobbyList();
-  const { account: me } = useStoredGoingAccount();
+  const { account: me, logout } = useStoredGoingAccount();
 
   const showEmpty = !loading && !error && signups.length === 0;
   const showList = signups.length > 0;
@@ -20,12 +20,12 @@ export default function LobbyPage() {
         <p className="text-xs text-brown-sugar/60">Lobby即將開始的活動</p>
         <h1 className="text-2xl font-bold text-brown-sugar">想參加名單…</h1>
         <p className="mt-2 text-sm leading-relaxed text-brown-sugar/65">
-          尚未加入今日活動。請先點選想參加、完成登入護照，再期待到現場加入。
+          敬請期待一齊到現場的遊樂
           <br />
         </p>
         {me && (
           <p className="mt-2 text-sm text-twilight">
-            你已登入：{me.runnerId}
+            你已登入：<span className="font-mono">{me.runnerId}</span>
           </p>
         )}
       </header>
@@ -33,7 +33,7 @@ export default function LobbyPage() {
       {!me && (
         <Card className="mb-4 border-sunset/30 bg-sunset/5">
           <p className="text-sm leading-relaxed text-brown-sugar/80">
-            請先點選想參加、完成登入護照，再期待到現場加入。
+            到首頁點選想參加、或完成、或登入護照，開始熱身。
           </p>
           <div className="mt-3 flex gap-2">
             <Button href="/" variant="secondary" className="flex-1">
@@ -127,9 +127,20 @@ export default function LobbyPage() {
           </ul>
         )}
       </Card>
-      <br />
-      <p className="text-xs font-bold text-brown-sugar/60">開跑日期稍候公佈...</p>
-
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <p className="text-xs font-bold text-brown-sugar/60">
+          開跑日期稍候公佈...
+        </p>
+        {me && (
+          <button
+            type="button"
+            onClick={logout}
+            className="shrink-0 cursor-pointer text-xs text-brown-sugar/50 underline hover:text-brown-sugar/70"
+          >
+            登出護照
+          </button>
+        )}
+      </div>
 
       <div className="mt-5 space-y-3">
         <Button href="/passport" variant="secondary" className="w-full">

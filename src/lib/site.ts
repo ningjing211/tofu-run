@@ -32,6 +32,8 @@ export const siteConfig = {
   /** 分享圖無障礙說明（Facebook、X、搜尋摘要用） */
   ogImageAlt:
     "豆花慢跑 Tofu Run 宣傳圖：芋圓、粉圓、花生、綠豆、紅豆配料圖示與「慢跑 RUN」字樣，高雄中央公園團體慢跑活動",
+  /** 活動日前先隱藏 LIVE 入口（Nav、護照、首頁） */
+  showLiveEntry: false,
 } as const;
 
 export function absoluteUrl(path = ""): string {

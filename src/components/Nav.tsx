@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const SHOW_LIVE_NAV = false;
+import { siteConfig } from "@/lib/site";
 
 const links = [
   { href: "/", label: "首頁" },
   { href: "/lobby", label: "Lobby" },
   { href: "/passport", label: "護照" },
-  ...(SHOW_LIVE_NAV ? [{ href: "/live", label: "LIVE" as const }] : []),
+  ...(siteConfig.showLiveEntry ? [{ href: "/live", label: "LIVE" as const }] : []),
 ];
 
 export function Nav() {

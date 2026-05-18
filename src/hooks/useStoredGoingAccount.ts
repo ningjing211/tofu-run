@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import {
+  clearStoredGoingAccount,
   getStoredGoingAccount,
   type StoredGoingAccount,
 } from "@/lib/goingAccount";
+import { clearStoredPlayer } from "@/lib/player";
 
 /** 避免 SSR 與 localStorage 不一致造成 hydration 錯誤 */
 export function useStoredGoingAccount() {
@@ -16,5 +18,11 @@ export function useStoredGoingAccount() {
     setMounted(true);
   }, []);
 
-  return { account, mounted };
+  function logout() {
+    clearStoredGoingAccount();
+    clearStoredPlayer();
+    setAccount(null);
+  }
+
+  return { account, mounted, logout };
 }

@@ -6,6 +6,7 @@ import { TokenIcon } from "@/components/TokenIcon";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { createMetadata } from "@/lib/metadata";
+import { siteConfig } from "@/lib/site";
 import { GATHERING_SLOTS, TOKEN_TYPES } from "@/lib/constants";
 
 export const metadata: Metadata = createMetadata({
@@ -91,9 +92,11 @@ export default function HomePage() {
         <Button href="/lobby" variant="secondary" className="w-full">
           查看想參加名單
         </Button>
-        <Button href="/live" className="w-full">
-          進入 LIVE（活動當日）
-        </Button>
+        {siteConfig.showLiveEntry && (
+          <Button href="/live" className="w-full">
+            進入 LIVE（活動當日）
+          </Button>
+        )}
       </div>
     </PageShell>
   );
