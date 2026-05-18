@@ -1,0 +1,2 @@
+-- 【已改為伺服器專用】請改執行 going_signups_lockdown_anon.sql
+-- 報名／護照登入改由 Next.js API + SUPABASE_SERVICE_ROLE_KEY 查寫，前端無法直連讀表。

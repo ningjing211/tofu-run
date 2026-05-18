@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { getStoredGoingAccount } from "@/lib/goingAccount";
 import { usePlayer } from "@/hooks/usePlayer";
 
 export default function JoinPage() {
   const router = useRouter();
+  const going = getStoredGoingAccount();
   const { player, loading, join } = usePlayer();
   const [status, setStatus] = useState<"idle" | "joining" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -19,13 +22,15 @@ export default function JoinPage() {
 
   useEffect(() => {
     if (loading) return;
-    if (player && status === "idle") {
+    if (!going?.runnerId) return;
+    if (player && player.runnerId === going.runnerId && status === "idle") {
       handleJoin();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, player]);
+  }, [loading, player, going?.runnerId]);
 
   async function handleJoin() {
+    if (!going?.runnerId) return;
     setStatus("joining");
     setError(null);
     try {
@@ -38,19 +43,43 @@ export default function JoinPage() {
     }
   }
 
+  if (!going?.runnerId) {
+    return (
+      <PageShell showNav={false}>
+        <div className="flex min-h-[70dvh] flex-col items-center justify-center text-center px-4">
+          <p className="mb-4 text-5xl">📔</p>
+          <h1 className="text-2xl font-bold text-brown-sugar">請先登入護照</h1>
+          <p className="mt-3 text-sm text-brown-sugar/70">
+            須先完成首頁「想參加」並以 Runner ID 登入護照，才能進入今日活動。
+          </p>
+          <Button href="/passport" className="mt-8 w-full max-w-sm">
+            前往護照登入
+          </Button>
+          <Link
+            href="/"
+            className="mt-4 text-xs text-brown-sugar/50 underline"
+          >
+            回首頁報名
+          </Link>
+        </div>
+      </PageShell>
+    );
+  }
+
   return (
     <PageShell showNav={false}>
       <div className="flex min-h-[70dvh] flex-col items-center justify-center text-center">
         <p className="mb-4 text-5xl animate-float">🥣</p>
-        <h1 className="text-2xl font-bold text-brown-sugar">加入豆花慢跑</h1>
+        <h1 className="text-2xl font-bold text-brown-sugar">加入今日活動</h1>
+        <p className="mt-2 font-mono text-sm text-twilight">{going.runnerId}</p>
 
         {status === "joining" && (
           <Card className="mt-8 w-full">
             <p className="animate-pulse-soft text-brown-sugar/80">
-              正在為你準備玩家身份…
+              正在為你開通今日場次…
             </p>
             <p className="mt-2 text-xs text-brown-sugar/50">
-              取得 GPS 位置（僅記錄首次登入）
+              記錄首次到場位置（僅一次）
             </p>
           </Card>
         )}
@@ -79,7 +108,7 @@ export default function JoinPage() {
           </Card>
         )}
 
-        {status === "idle" && !player && (
+        {status === "idle" && !result && (
           <Button className="mt-8 w-full" onClick={handleJoin}>
             開始加入
           </Button>

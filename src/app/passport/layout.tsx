@@ -4,7 +4,7 @@ import { createMetadata } from "@/lib/metadata";
 export const metadata: Metadata = createMetadata({
   title: "豆花護照",
   description:
-    "你的豆花慢跑紀錄：完成的豆花、Checkpoint Token 與活動歷史。",
+    "豆花護照：登入 Runner ID 查看帳戶、豆花目標與要收集的 Token；現場加入後可查看活動紀錄。",
   path: "/passport",
 });
 

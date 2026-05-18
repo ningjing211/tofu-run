@@ -46,35 +46,50 @@ create index if not exists idx_tokens_user on tokens(user_id);
 create index if not exists idx_tokens_user_type on tokens(user_id, token_type);
 
 -- 首頁「想參加 / 有興趣」預先登記
-create table if not exists interest_signups (
+create table if not exists going_signups (
   id uuid primary key default gen_random_uuid(),
   email text not null,
-  nickname text not null,
-  line_id text,
   runner_id text,
+  runner_name text,
+  custom_name text,
+  nickname text,
+  line_id text,
   intent text not null check (intent in ('join', 'interested')),
+  topping1 text,
+  topping2 text,
+  topping3 text,
+  goal text,
   preferred_toppings text[] default '{}',
   douhua_goal text,
   created_at timestamptz not null default now()
 );
 
 -- 若表已建立，可單獨執行：
--- alter table interest_signups add column if not exists line_id text;
--- alter table interest_signups add column if not exists preferred_toppings text[] default '{}';
--- alter table interest_signups add column if not exists douhua_goal text;
--- alter table interest_signups add column if not exists runner_id text;
+-- alter table going_signups add column if not exists line_id text;
+-- alter table going_signups add column if not exists preferred_toppings text[] default '{}';
+-- alter table going_signups add column if not exists douhua_goal text;
+-- alter table going_signups add column if not exists runner_id text;
+-- alter table going_signups add column if not exists runner_name text;
+-- alter table going_signups add column if not exists custom_name text;
+-- alter table going_signups alter column nickname drop not null;
+-- alter table going_signups add column if not exists topping1 text;
+-- alter table going_signups add column if not exists topping2 text;
+-- alter table going_signups add column if not exists topping3 text;
+-- alter table going_signups add column if not exists goal text;
+-- 既有專案改表名：alter table interest_signups rename to going_signups;
 
-create index if not exists idx_interest_signups_created on interest_signups(created_at desc);
+create index if not exists idx_going_signups_created on going_signups(created_at desc);
 
 alter table users enable row level security;
 alter table sessions enable row level security;
 alter table user_sessions enable row level security;
 alter table tokens enable row level security;
-alter table interest_signups enable row level security;
+alter table going_signups enable row level security;
 
 -- MVP：允許 anon 讀寫（活動用，正式環境請收緊）
 create policy "anon_all_users" on users for all to anon using (true) with check (true);
 create policy "anon_all_sessions" on sessions for all to anon using (true) with check (true);
 create policy "anon_all_user_sessions" on user_sessions for all to anon using (true) with check (true);
 create policy "anon_all_tokens" on tokens for all to anon using (true) with check (true);
-create policy "anon_insert_interest" on interest_signups for insert to anon with check (true);
+-- going_signups：僅伺服器 service role 讀寫（見 .env SUPABASE_SERVICE_ROLE_KEY）
+-- 勿對 anon 開放 select/insert，避免前端直連洩漏報名資料

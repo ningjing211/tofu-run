@@ -1,7 +1,10 @@
-import { createSupabaseClient } from "@/lib/supabase";
+import { createSupabaseClient, createSupabaseServiceClient } from "@/lib/supabase";
 import { getTodayDateString } from "@/lib/session";
+import { collectTargetsFromSignup } from "@/lib/toppings";
 import type {
+  GoingSignup,
   LobbyPlayer,
+  PassportAccount,
   PassportRun,
   Session,
   Token,
@@ -70,6 +73,118 @@ export async function getPoolStats(): Promise<{
   const t = total ?? 0;
   const c = claimed ?? 0;
   return { total: t, claimed: c, remaining: t - c };
+}
+
+/** 是否已完成「想參加」報名（僅伺服器 service role 查詢） */
+export async function getGoingSignupByRunnerId(
+  runnerId: string
+): Promise<GoingSignup | null> {
+  const supabase = createSupabaseServiceClient();
+  const { data, error } = await supabase
+    .from("going_signups")
+    .select("*")
+    .eq("runner_id", runnerId)
+    .eq("intent", "join")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw error;
+  return (data as GoingSignup) ?? null;
+}
+
+export async function hasGoingJoinSignup(runnerId: string): Promise<boolean> {
+  const row = await getGoingSignupByRunnerId(runnerId);
+  return row !== null;
+}
+
+export async function insertGoingSignup(row: {
+  email: string;
+  custom_name: string | null;
+  nickname: string | null;
+  line_id: string | null;
+  runner_id: string | null;
+  runner_name: string | null;
+  intent: string;
+  topping1: string | null;
+  topping2: string | null;
+  topping3: string | null;
+  goal: string | null;
+  preferred_toppings: string[];
+  douhua_goal: string | null;
+}): Promise<void> {
+  const supabase = createSupabaseServiceClient();
+  const { error } = await supabase.from("going_signups").insert(row);
+  if (error) throw error;
+}
+
+export async function getUserByRunnerId(runnerId: string): Promise<User | null> {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("runner_id", runnerId)
+    .not("slot_no", "is", null)
+    .maybeSingle();
+
+  if (error) throw error;
+  return (data as User) ?? null;
+}
+
+/** 現場加入：領取該 runner_id 對應名額（須已存在 going_signups） */
+export async function claimPoolUserByRunnerId(
+  runnerId: string,
+  lat: number | null,
+  lng: number | null
+): Promise<User | null> {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase.rpc("claim_pool_user_by_runner_id", {
+    p_runner_id: runnerId,
+    p_lat: lat,
+    p_lng: lng,
+  });
+
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : data;
+  return (row as User) ?? null;
+}
+
+export async function getPassportAccount(
+  runnerId: string
+): Promise<PassportAccount | null> {
+  const signup = await getGoingSignupByRunnerId(runnerId);
+  if (!signup) return null;
+
+  const user = await getUserByRunnerId(runnerId);
+  const collectTargets = collectTargetsFromSignup(
+    signup.goal,
+    signup.topping1,
+    signup.topping2,
+    signup.topping3
+  );
+
+  if (!user) {
+    return { signup, collectTargets, user: null, runs: [] };
+  }
+
+  const { runs } = await getPassportData(user.id);
+  return { signup, collectTargets, user, runs };
+}
+
+/** 依 Runner ID 查詢 300 名額池中的跑者 */
+export async function getPoolUserByRunnerId(
+  runnerId: string
+): Promise<Pick<User, "runner_id" | "runner_name"> | null> {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("users")
+    .select("runner_id, runner_name")
+    .eq("runner_id", runnerId)
+    .not("slot_no", "is", null)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data as Pick<User, "runner_id" | "runner_name"> | null;
 }
 
 export async function createUser(

@@ -1,45 +1,79 @@
 import { NextResponse } from "next/server";
 import {
-  claimNextPoolUser,
+  claimPoolUserByRunnerId,
+  getGoingSignupByRunnerId,
   getOrCreateTodaySession,
+  getUserByRunnerId,
   joinSession,
 } from "@/lib/db";
-import { isSupabaseConfigured } from "@/lib/supabase";
+import { normalizeRunnerId, RUNNER_ID_PATTERN } from "@/lib/runner";
+import {
+  isSupabaseConfigured,
+  isSupabaseServiceConfigured,
+} from "@/lib/supabase";
 
 export async function POST(request: Request) {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured() || !isSupabaseServiceConfigured()) {
     return NextResponse.json(
-      { error: "Supabase 尚未設定" },
+      { error: "Supabase 尚未設定完整" },
       { status: 503 }
     );
   }
 
   try {
     const body = await request.json().catch(() => ({}));
-    const { userId, lat, lng } = body as {
+    const { userId, runnerId: rawRunnerId, lat, lng } = body as {
       userId?: string;
+      runnerId?: string;
       lat?: number | null;
       lng?: number | null;
     };
 
+    const runnerId = rawRunnerId ? normalizeRunnerId(rawRunnerId) : "";
+
+    if (!runnerId || !RUNNER_ID_PATTERN.test(runnerId)) {
+      return NextResponse.json(
+        { error: "請提供有效的 Runner ID" },
+        { status: 400 }
+      );
+    }
+
+    const signup = await getGoingSignupByRunnerId(runnerId);
+    if (!signup) {
+      return NextResponse.json(
+        { error: "請先完成首頁「想參加」報名，才能加入今日活動" },
+        { status: 403 }
+      );
+    }
+
     const session = await getOrCreateTodaySession();
 
     if (userId) {
+      const poolUser = await getUserByRunnerId(runnerId);
+      if (!poolUser || poolUser.id !== userId) {
+        return NextResponse.json({ error: "身份不符" }, { status: 403 });
+      }
       const userSession = await joinSession(userId, session.id);
       return NextResponse.json({
         userId,
+        runnerId: poolUser.runner_id,
+        runnerName: signup.nickname ?? poolUser.runner_name,
         sessionId: session.id,
         userSessionId: userSession.id,
         rejoined: true,
       });
     }
 
-    const user = await claimNextPoolUser(lat ?? null, lng ?? null);
+    const user = await claimPoolUserByRunnerId(
+      runnerId,
+      lat ?? null,
+      lng ?? null
+    );
 
     if (!user) {
       return NextResponse.json(
-        { error: "今日 300 名額已滿，請聯絡主辦人" },
-        { status: 409 }
+        { error: "找不到此 Runner ID 的名額，請確認編號" },
+        { status: 404 }
       );
     }
 
@@ -48,7 +82,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       userId: user.id,
       runnerId: user.runner_id,
-      runnerName: user.runner_name,
+      runnerName: signup.nickname ?? user.runner_name,
       slotNo: user.slot_no,
       sessionId: session.id,
       userSessionId: userSession.id,

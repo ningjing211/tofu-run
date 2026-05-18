@@ -55,9 +55,14 @@ export default function LobbyPage() {
 
       {!me && (
         <Card className="mb-4 border-sunset/40">
-          <p className="text-sm text-brown-sugar/80">尚未加入活動</p>
-          <Button href="/join" className="mt-3 w-full">
-            掃碼加入
+          <p className="text-sm text-brown-sugar/80">
+            尚未加入今日活動。請先完成想參加、登入護照，再到現場加入。
+          </p>
+          <Button href="/passport" variant="secondary" className="mt-3 w-full">
+            護照登入
+          </Button>
+          <Button href="/join" className="mt-2 w-full">
+            進入今日活動
           </Button>
         </Card>
       )}

@@ -5,15 +5,28 @@ import {
   TOFU_TYPES,
   formatDouhuaGoal,
 } from "@/lib/constants";
-import { createSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
+import { resolveDisplayName } from "@/lib/displayName";
+import {
+  getPoolUserByRunnerId,
+  hasGoingJoinSignup,
+  insertGoingSignup,
+} from "@/lib/db";
+import { normalizeRunnerId, RUNNER_ID_PATTERN } from "@/lib/runner";
+import {
+  isSupabaseConfigured,
+  isSupabaseServiceConfigured,
+} from "@/lib/supabase";
 
 const VALID_INTENTS = ["join", "interested"] as const;
 const VALID_TOPPING_IDS = TOFU_TYPES.map((t) => t.id);
 
 export async function POST(request: Request) {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured() || !isSupabaseServiceConfigured()) {
     return NextResponse.json(
-      { error: "Supabase 尚未設定，無法儲存報名" },
+      {
+        error:
+          "Supabase 尚未設定完整（需 NEXT_PUBLIC_* 與 SUPABASE_SERVICE_ROLE_KEY）",
+      },
       { status: 503 }
     );
   }
@@ -22,7 +35,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const {
       email,
-      nickname,
+      customName,
       intent,
       lineId,
       runnerId,
@@ -31,7 +44,7 @@ export async function POST(request: Request) {
       pureOnly,
     } = body as {
       email?: string;
-      nickname?: string;
+      customName?: string;
       intent?: string;
       lineId?: string;
       runnerId?: string;
@@ -41,13 +54,17 @@ export async function POST(request: Request) {
     };
 
     const trimmedEmail = email?.trim().toLowerCase() ?? "";
-    const trimmedNickname = nickname?.trim() ?? "";
+    const trimmedCustomName = customName?.trim() ?? "";
     const trimmedLineId = lineId?.trim() || null;
-    const trimmedRunnerId = runnerId?.trim().toUpperCase() ?? "";
+    const trimmedRunnerId = runnerId ? normalizeRunnerId(runnerId) : "";
 
-    if (!trimmedEmail || !trimmedNickname) {
+    if (!trimmedEmail) {
+      return NextResponse.json({ error: "請填寫 Email" }, { status: 400 });
+    }
+
+    if (trimmedCustomName.length > 24) {
       return NextResponse.json(
-        { error: "請填寫暱稱與 Email" },
+        { error: "自訂暱稱最多 24 字" },
         { status: 400 }
       );
     }
@@ -60,28 +77,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "請選擇參加意願" }, { status: 400 });
     }
 
-    const supabase = createSupabaseClient();
+    let poolRunnerName: string | null = null;
 
     if (intent === "join") {
       if (!trimmedRunnerId) {
         return NextResponse.json({ error: "請填寫 Runner ID" }, { status: 400 });
       }
 
-      if (!/^[A-Z]{2,4}-\d{3}$/.test(trimmedRunnerId)) {
+      if (!RUNNER_ID_PATTERN.test(trimmedRunnerId)) {
         return NextResponse.json(
           { error: "Runner ID 格式不正確（例：DOG-214）" },
           { status: 400 }
         );
       }
 
-      const { data: poolUser, error: poolError } = await supabase
-        .from("users")
-        .select("id, runner_id, runner_name, slot_no")
-        .eq("runner_id", trimmedRunnerId)
-        .not("slot_no", "is", null)
-        .maybeSingle();
+      const poolUser = await getPoolUserByRunnerId(trimmedRunnerId);
 
-      if (poolError) throw poolError;
       if (!poolUser) {
         return NextResponse.json(
           { error: "找不到此 Runner ID，請確認名額編號" },
@@ -89,14 +100,9 @@ export async function POST(request: Request) {
         );
       }
 
-      const { data: existing } = await supabase
-        .from("interest_signups")
-        .select("id")
-        .eq("runner_id", trimmedRunnerId)
-        .eq("intent", "join")
-        .maybeSingle();
+      poolRunnerName = poolUser.runner_name;
 
-      if (existing) {
+      if (await hasGoingJoinSignup(trimmedRunnerId)) {
         return NextResponse.json(
           { error: "此 Runner ID 已登記過想參加" },
           { status: 409 }
@@ -140,25 +146,37 @@ export async function POST(request: Request) {
           : douhuaGoal?.trim() || formatDouhuaGoal(toppings)
         : null;
 
-    const { error } = await supabase.from("interest_signups").insert({
+    const displayName = resolveDisplayName(
+      trimmedCustomName,
+      intent === "join" ? poolRunnerName : null
+    );
+
+    const dbToppings = intent === "join" && !isPureOnly ? toppings : [];
+
+    await insertGoingSignup({
       email: trimmedEmail,
-      nickname: trimmedNickname,
-      line_id: trimmedLineId,
       runner_id: intent === "join" ? trimmedRunnerId : null,
+      runner_name: intent === "join" ? poolRunnerName : null,
+      custom_name: trimmedCustomName || null,
+      nickname: displayName,
+      line_id: trimmedLineId,
       intent,
+      topping1: dbToppings[0] ?? null,
+      topping2: dbToppings[1] ?? null,
+      topping3: dbToppings[2] ?? null,
+      goal: intent === "join" ? goal : null,
       preferred_toppings:
         intent === "join" ? (isPureOnly ? ["none"] : toppings) : [],
       douhua_goal: goal,
     });
 
-    if (error) {
-      console.error(error);
-      return NextResponse.json({ error: "儲存失敗" }, { status: 500 });
-    }
-
     return NextResponse.json({ ok: true, douhuaGoal: goal });
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ error: "送出失敗" }, { status: 500 });
+    const message =
+      e instanceof Error && e.message.includes("SERVICE_ROLE")
+        ? "伺服器缺少 SUPABASE_SERVICE_ROLE_KEY"
+        : "送出失敗";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

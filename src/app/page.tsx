@@ -82,11 +82,14 @@ export default function HomePage() {
       </Card>
 
       <div className="space-y-3 pb-4">
+        <Button href="/passport" variant="secondary" className="w-full">
+          我的護照（登入）
+        </Button>
         <Button href="/lobby" className="w-full">
           進入今日 Lobby
         </Button>
         <p className="text-center text-[11px] text-brown-sugar/50">
-          已於現場掃碼加入的玩家，可由此進入 Lobby
+          須先完成「想參加」並於護照登入；現場加入後可進 Lobby
         </p>
       </div>
     </PageShell>

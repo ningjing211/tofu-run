@@ -54,3 +54,31 @@ export type StoredPlayer = {
   runnerId: string;
   runnerName: string;
 };
+
+export type GoingSignup = {
+  id: string;
+  email: string;
+  runner_id: string | null;
+  runner_name: string | null;
+  custom_name: string | null;
+  nickname: string | null;
+  line_id: string | null;
+  intent: string;
+  topping1: string | null;
+  topping2: string | null;
+  topping3: string | null;
+  goal: string | null;
+  created_at: string;
+};
+
+export type PassportAccount = {
+  signup: GoingSignup;
+  collectTargets: {
+    id: string;
+    label: string;
+    zone: string;
+    tokenLabel: string;
+  }[];
+  user: User | null;
+  runs: PassportRun[];
+};

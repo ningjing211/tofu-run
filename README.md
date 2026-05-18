@@ -31,8 +31,11 @@ cp .env.local.example .env.local
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`（僅伺服器；報名／護照查詢用，**勿**加 `NEXT_PUBLIC_`）
 - `ADMIN_SECRET`（管理者頁面密鑰）
 - `NEXT_PUBLIC_APP_URL`（部署後的網址，QR code 用）
+
+報名表 `going_signups` 建議執行 [`supabase/going_signups_lockdown_anon.sql`](./supabase/going_signups_lockdown_anon.sql)，避免前端用 anon key 直連讀取 Email。
 
 ### 3. 啟動開發伺服器
 
