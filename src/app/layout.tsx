@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_TC } from "next/font/google";
+import { JsonLd } from "@/components/JsonLd";
+import { createMetadata } from "@/lib/metadata";
+import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
 const notoSansTC = Noto_Sans_TC({
@@ -9,8 +12,17 @@ const notoSansTC = Noto_Sans_TC({
 });
 
 export const metadata: Metadata = {
-  title: "豆花慢跑 | Tofu Run",
-  description: "一起完成屬於你的一碗豆花。高雄中央公園城市輕社交慢跑遊戲。",
+  ...createMetadata(),
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  appleWebApp: {
+    capable: true,
+    title: siteConfig.name,
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
@@ -18,6 +30,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -27,7 +40,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-Hant" className={`${notoSansTC.variable} h-full`}>
-      <body className="min-h-full antialiased">{children}</body>
+      <body className="min-h-full antialiased">
+        <JsonLd />
+        {children}
+      </body>
     </html>
   );
 }

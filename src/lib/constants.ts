@@ -30,31 +30,31 @@ export const TOKEN_TYPES = [
     id: "redbean",
     label: "紅豆 Token",
     zone: "水池區",
-    emoji: "🫘",
+    image: "/tokens/redbean.png",
   },
   {
     id: "mungbean",
     label: "綠豆 Token",
     zone: "樹林區",
-    emoji: "🌿",
+    image: "/tokens/mungbean.png",
   },
   {
     id: "peanut",
     label: "花生 Token",
     zone: "草地區",
-    emoji: "🥜",
+    image: "/tokens/peanut.png",
   },
   {
     id: "tapioca",
     label: "粉圓 Token",
     zone: "步道區",
-    emoji: "⚪",
+    image: "/tokens/tapioca.png",
   },
   {
     id: "taro",
     label: "芋圓 Token",
     zone: "廣場區",
-    emoji: "💜",
+    image: "/tokens/taro.png",
   },
 ] as const;
 

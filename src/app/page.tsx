@@ -1,11 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { InterestSignup } from "@/components/InterestSignup";
 import { JoinQrCard } from "@/components/JoinQrCard";
 import { PageShell } from "@/components/PageShell";
 import { ParkMap } from "@/components/ParkMap";
+import { TokenIcon } from "@/components/TokenIcon";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { createMetadata } from "@/lib/metadata";
 import { GATHERING_SLOTS, TOKEN_TYPES } from "@/lib/constants";
+
+export const metadata: Metadata = createMetadata({
+  path: "/",
+});
 
 export default function HomePage() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -72,8 +79,9 @@ export default function HomePage() {
               key={t.id}
               className="flex items-center justify-between rounded-xl bg-cream/60 px-3 py-2 text-sm"
             >
-              <span>
-                {t.emoji} {t.zone}
+              <span className="flex items-center gap-2">
+                <TokenIcon src={t.image} alt={t.label} size={28} />
+                {t.zone}
               </span>
               <span className="text-brown-sugar/60">{t.label}</span>
             </li>

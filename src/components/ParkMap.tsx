@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { TOKEN_TYPES } from "@/lib/constants";
 
 const PIN_POSITIONS = [
@@ -7,6 +8,8 @@ const PIN_POSITIONS = [
   "right-[22%] bottom-[38%]",
   "right-[30%] bottom-[18%]",
 ];
+
+const TOKEN_SIZE = 56;
 
 export function ParkMap() {
   return (
@@ -25,16 +28,24 @@ export function ParkMap() {
       {TOKEN_TYPES.map((token, i) => (
         <div
           key={token.id}
-          className={`absolute ${PIN_POSITIONS[i]} flex flex-col items-center`}
+          className={`absolute ${PIN_POSITIONS[i]} z-10 flex flex-col items-center`}
         >
-          <span className="animate-float text-xl">{token.emoji}</span>
+          <div className="animate-float">
+            <Image
+              src={token.image}
+              alt={token.label}
+              width={TOKEN_SIZE}
+              height={TOKEN_SIZE}
+              className="h-14 w-14 object-contain drop-shadow-lg"
+            />
+          </div>
           <span className="mt-0.5 rounded-full bg-cream/90 px-2 py-0.5 text-[10px] font-medium text-brown-sugar shadow-sm">
             {token.zone}
           </span>
         </div>
       ))}
 
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse-soft text-2xl">
+      <div className="absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 animate-pulse-soft text-2xl">
         🥣
       </div>
     </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { TokenIcon } from "@/components/TokenIcon";
 import { TOKEN_TYPES, getTokenLabel } from "@/lib/constants";
 import { getCurrentPosition } from "@/lib/geolocation";
 import { getStoredPlayer } from "@/lib/player";
@@ -79,7 +80,14 @@ export default function ScanPage({
     return (
       <PageShell showNav={false}>
         <Card className="mt-16 text-center">
-          <p className="mb-4 text-4xl">{tokenInfo?.emoji}</p>
+          {tokenInfo && (
+            <TokenIcon
+              src={tokenInfo.image}
+              alt={tokenInfo.label}
+              size={80}
+              className="mx-auto mb-4"
+            />
+          )}
           <h1 className="text-xl font-bold">{tokenInfo?.zone}</h1>
           <p className="mt-4 text-sm text-brown-sugar/70">
             請先加入活動才能掃描 Token
@@ -95,7 +103,16 @@ export default function ScanPage({
   return (
     <PageShell showNav={false}>
       <div className="flex min-h-[70dvh] flex-col items-center justify-center text-center">
-        <p className="mb-4 text-6xl animate-float">{tokenInfo?.emoji}</p>
+        {tokenInfo && (
+          <div className="mb-4 animate-float">
+            <TokenIcon
+              src={tokenInfo.image}
+              alt={tokenInfo.label}
+              size={96}
+              className="mx-auto"
+            />
+          </div>
+        )}
         <h1 className="text-2xl font-bold text-brown-sugar">
           {tokenInfo?.zone}
         </h1>
