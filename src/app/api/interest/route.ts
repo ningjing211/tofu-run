@@ -20,20 +20,30 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { email, nickname, intent, lineId, preferredToppings, douhuaGoal, pureOnly } =
-      body as {
-        email?: string;
-        nickname?: string;
-        intent?: string;
-        lineId?: string;
-        preferredToppings?: string[];
-        douhuaGoal?: string;
-        pureOnly?: boolean;
-      };
+    const {
+      email,
+      nickname,
+      intent,
+      lineId,
+      runnerId,
+      preferredToppings,
+      douhuaGoal,
+      pureOnly,
+    } = body as {
+      email?: string;
+      nickname?: string;
+      intent?: string;
+      lineId?: string;
+      runnerId?: string;
+      preferredToppings?: string[];
+      douhuaGoal?: string;
+      pureOnly?: boolean;
+    };
 
     const trimmedEmail = email?.trim().toLowerCase() ?? "";
     const trimmedNickname = nickname?.trim() ?? "";
     const trimmedLineId = lineId?.trim() || null;
+    const trimmedRunnerId = runnerId?.trim().toUpperCase() ?? "";
 
     if (!trimmedEmail || !trimmedNickname) {
       return NextResponse.json(
@@ -48,6 +58,50 @@ export async function POST(request: Request) {
 
     if (!intent || !VALID_INTENTS.includes(intent as (typeof VALID_INTENTS)[number])) {
       return NextResponse.json({ error: "請選擇參加意願" }, { status: 400 });
+    }
+
+    const supabase = createSupabaseClient();
+
+    if (intent === "join") {
+      if (!trimmedRunnerId) {
+        return NextResponse.json({ error: "請填寫 Runner ID" }, { status: 400 });
+      }
+
+      if (!/^[A-Z]{2,4}-\d{3}$/.test(trimmedRunnerId)) {
+        return NextResponse.json(
+          { error: "Runner ID 格式不正確（例：DOG-214）" },
+          { status: 400 }
+        );
+      }
+
+      const { data: poolUser, error: poolError } = await supabase
+        .from("users")
+        .select("id, runner_id, runner_name, slot_no")
+        .eq("runner_id", trimmedRunnerId)
+        .not("slot_no", "is", null)
+        .maybeSingle();
+
+      if (poolError) throw poolError;
+      if (!poolUser) {
+        return NextResponse.json(
+          { error: "找不到此 Runner ID，請確認名額編號" },
+          { status: 404 }
+        );
+      }
+
+      const { data: existing } = await supabase
+        .from("interest_signups")
+        .select("id")
+        .eq("runner_id", trimmedRunnerId)
+        .eq("intent", "join")
+        .maybeSingle();
+
+      if (existing) {
+        return NextResponse.json(
+          { error: "此 Runner ID 已登記過想參加" },
+          { status: 409 }
+        );
+      }
     }
 
     let toppings: string[] = [];
@@ -86,11 +140,11 @@ export async function POST(request: Request) {
           : douhuaGoal?.trim() || formatDouhuaGoal(toppings)
         : null;
 
-    const supabase = createSupabaseClient();
     const { error } = await supabase.from("interest_signups").insert({
       email: trimmedEmail,
       nickname: trimmedNickname,
       line_id: trimmedLineId,
+      runner_id: intent === "join" ? trimmedRunnerId : null,
       intent,
       preferred_toppings:
         intent === "join" ? (isPureOnly ? ["none"] : toppings) : [],

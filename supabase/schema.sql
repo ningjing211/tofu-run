@@ -51,6 +51,7 @@ create table if not exists interest_signups (
   email text not null,
   nickname text not null,
   line_id text,
+  runner_id text,
   intent text not null check (intent in ('join', 'interested')),
   preferred_toppings text[] default '{}',
   douhua_goal text,
@@ -61,6 +62,7 @@ create table if not exists interest_signups (
 -- alter table interest_signups add column if not exists line_id text;
 -- alter table interest_signups add column if not exists preferred_toppings text[] default '{}';
 -- alter table interest_signups add column if not exists douhua_goal text;
+-- alter table interest_signups add column if not exists runner_id text;
 
 create index if not exists idx_interest_signups_created on interest_signups(created_at desc);
 

@@ -18,6 +18,7 @@ const INTENT_LABEL: Record<Intent, string> = {
 
 export function InterestSignup() {
   const [intent, setIntent] = useState<Intent | null>(null);
+  const [runnerId, setRunnerId] = useState("");
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [lineId, setLineId] = useState("");
@@ -29,9 +30,13 @@ export function InterestSignup() {
   const [error, setError] = useState<string | null>(null);
 
   function openForm(selected: Intent) {
+    setError(null);
+    if (selected === "join" && !runnerId.trim()) {
+      setError("請先輸入你的 Runner ID");
+      return;
+    }
     setIntent(selected);
     setStatus("idle");
-    setError(null);
     if (selected !== "join") {
       setToppings([]);
       setPickNone(false);
@@ -40,6 +45,7 @@ export function InterestSignup() {
 
   function closeForm() {
     setIntent(null);
+    setRunnerId("");
     setNickname("");
     setEmail("");
     setLineId("");
@@ -62,6 +68,8 @@ export function InterestSignup() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           intent,
+          runnerId:
+            intent === "join" ? runnerId.trim().toUpperCase() : undefined,
           nickname: nickname.trim(),
           email: email.trim(),
           lineId: lineId.trim() || undefined,
@@ -97,6 +105,11 @@ export function InterestSignup() {
       <Card className="mb-5 border-2 border-mung-green/25 bg-gradient-to-br from-mung-green/10 to-tofu-white text-center">
         <p className="text-3xl">🥣</p>
         <h2 className="mt-2 text-lg font-semibold text-brown-sugar">收到了！</h2>
+        {intent === "join" && runnerId && (
+          <p className="mt-2 font-mono text-sm text-twilight">
+            Runner ID：{runnerId.trim().toUpperCase()}
+          </p>
+        )}
         {successGoal && (
           <p className="mt-3 rounded-xl bg-cream/80 px-4 py-2 text-base font-semibold text-brown-sugar">
             目標：{successGoal}
@@ -133,7 +146,33 @@ export function InterestSignup() {
       </p>
 
       {!intent ? (
-        <div className="mt-5 flex gap-3">
+        <div className="mt-5 space-y-3">
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-medium text-brown-sugar/70">
+              Runner ID
+            </span>
+            <input
+              type="text"
+              value={runnerId}
+              onChange={(e) => {
+                setRunnerId(e.target.value.toUpperCase());
+                setError(null);
+              }}
+              placeholder="例如：DOG-214"
+              className="w-full rounded-xl border border-brown-sugar/15 bg-cream px-4 py-3 font-mono text-sm tracking-wide text-brown-sugar outline-none transition-colors placeholder:font-sans placeholder:text-brown-sugar/35 focus:border-sunset/60 focus:ring-2 focus:ring-sunset/20"
+            />
+            <p className="mt-1 text-[10px] text-brown-sugar/45">
+              填寫你的 Runner ID 並且按下想參加
+            </p>
+          </label>
+
+          {error && (
+            <p className="rounded-lg bg-red-bean/10 px-3 py-2 text-xs text-red-bean">
+              {error}
+            </p>
+          )}
+
+          <div className="flex gap-3">
           <button
             type="button"
             onClick={() => openForm("join")}
@@ -148,12 +187,18 @@ export function InterestSignup() {
           >
             有興趣
           </button>
+          </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <p className="rounded-xl bg-sunset/10 px-3 py-2 text-center text-xs text-brown-sugar">
             你選了：
             <span className="font-semibold"> {INTENT_LABEL[intent]}</span>
+            {intent === "join" && runnerId && (
+              <span className="mt-1 block font-mono text-twilight">
+                {runnerId.trim().toUpperCase()}
+              </span>
+            )}
             <button
               type="button"
               onClick={() => setIntent(null)}
