@@ -22,4 +22,10 @@ export function setStoredGoingAccount(account: StoredGoingAccount): void {
 
 export function clearStoredGoingAccount(): void {
   localStorage.removeItem(GOING_ACCOUNT_KEY);
+  // 與護照快取一併清除（避免登出後仍顯示舊資料）
+  try {
+    localStorage.removeItem("tofu-run-passport-cache");
+  } catch {
+    /* ignore */
+  }
 }

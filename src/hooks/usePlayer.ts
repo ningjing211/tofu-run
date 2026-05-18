@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getStoredGoingAccount } from "@/lib/goingAccount";
+import { clearPassportCache } from "@/lib/passportCache";
 import { getStoredPlayer, setStoredPlayer } from "@/lib/player";
 import { getCurrentPosition } from "@/lib/geolocation";
 import type { StoredPlayer } from "@/types/database";
@@ -64,6 +65,7 @@ export function usePlayer() {
     };
     setStoredPlayer(newPlayer);
     setPlayer(newPlayer);
+    clearPassportCache();
     return newPlayer;
   }, []);
 

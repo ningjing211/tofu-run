@@ -16,6 +16,10 @@ import {
   getStoredGoingAccount,
   setStoredGoingAccount,
 } from "@/lib/goingAccount";
+import {
+  getPassportCache,
+  setPassportCache,
+} from "@/lib/passportCache";
 import { clearStoredPlayer, getStoredPlayer } from "@/lib/player";
 import {
   formatDisplayDate,
@@ -30,26 +34,52 @@ export default function PassportPage() {
   const [loading, setLoading] = useState(true);
   const [loginLoading, setLoginLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const loadAccount = useCallback(async (runnerId: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(
-        `/api/passport?runnerId=${encodeURIComponent(runnerId)}`
-      );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "載入失敗");
-      setAccount(data as PassportAccount);
-      setSessionRunnerId(runnerId);
-      setStoredGoingAccount({ runnerId });
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "載入失敗");
-      setAccount(null);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const loadAccount = useCallback(
+    async (runnerId: string, options?: { force?: boolean }) => {
+      const cached = !options?.force ? getPassportCache(runnerId) : null;
+
+      if (cached) {
+        setAccount(cached.account);
+        setSessionRunnerId(runnerId);
+        setStoredGoingAccount({ runnerId });
+        setError(null);
+        setLoading(false);
+
+        if (!cached.stale) return;
+
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+        setError(null);
+      }
+
+      try {
+        const res = await fetch(
+          `/api/passport?runnerId=${encodeURIComponent(runnerId)}`,
+          { cache: "no-store" }
+        );
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? "載入失敗");
+        const next = data as PassportAccount;
+        setAccount(next);
+        setSessionRunnerId(runnerId);
+        setStoredGoingAccount({ runnerId });
+        setPassportCache(runnerId, next);
+        setError(null);
+      } catch (e) {
+        if (!cached) {
+          setError(e instanceof Error ? e.message : "載入失敗");
+          setAccount(null);
+        }
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const stored = getStoredGoingAccount();
@@ -153,6 +183,12 @@ export default function PassportPage() {
             </p>
           )}
       </header>
+
+      {refreshing && !loading && (
+        <p className="mb-2 text-center text-[10px] text-brown-sugar/45">
+          更新中…
+        </p>
+      )}
 
       {loading && (
         <p className="animate-pulse-soft text-center text-sm text-brown-sugar/60">

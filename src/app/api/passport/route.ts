@@ -41,7 +41,11 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.json(account);
+    return NextResponse.json(account, {
+      headers: {
+        "Cache-Control": "private, max-age=60, stale-while-revalidate=300",
+      },
+    });
   } catch (e) {
     console.error(e);
     return NextResponse.json(
