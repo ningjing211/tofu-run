@@ -2,6 +2,8 @@ export type User = {
   id: string;
   runner_id: string;
   runner_name: string;
+  slot_no: number | null;
+  claimed_at: string | null;
   first_lat: number | null;
   first_lng: number | null;
   created_at: string;

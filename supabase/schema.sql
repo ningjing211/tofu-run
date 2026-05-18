@@ -5,10 +5,16 @@ create table if not exists users (
   id uuid primary key default gen_random_uuid(),
   runner_id text unique not null,
   runner_name text not null,
+  slot_no int unique,
+  claimed_at timestamptz,
   first_lat double precision,
   first_lng double precision,
   created_at timestamptz not null default now()
 );
+
+create index if not exists idx_users_pool_unclaimed
+  on users (slot_no)
+  where claimed_at is null and slot_no is not null;
 
 create table if not exists sessions (
   id uuid primary key default gen_random_uuid(),

@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import {
-  createUser,
+  claimNextPoolUser,
   getOrCreateTodaySession,
   joinSession,
 } from "@/lib/db";
-import { generateRunnerId, generateRunnerName } from "@/lib/player";
 import { isSupabaseConfigured } from "@/lib/supabase";
 
 export async function POST(request: Request) {
@@ -35,31 +34,12 @@ export async function POST(request: Request) {
       });
     }
 
-    let runnerId = generateRunnerId();
-    let runnerName = generateRunnerName();
-    let user = null;
-    let attempts = 0;
-
-    while (attempts < 5) {
-      try {
-        user = await createUser(
-          runnerId,
-          runnerName,
-          lat ?? null,
-          lng ?? null
-        );
-        break;
-      } catch {
-        runnerId = generateRunnerId();
-        runnerName = generateRunnerName();
-        attempts++;
-      }
-    }
+    const user = await claimNextPoolUser(lat ?? null, lng ?? null);
 
     if (!user) {
       return NextResponse.json(
-        { error: "無法建立玩家" },
-        { status: 500 }
+        { error: "今日 300 名額已滿，請聯絡主辦人" },
+        { status: 409 }
       );
     }
 
@@ -69,6 +49,7 @@ export async function POST(request: Request) {
       userId: user.id,
       runnerId: user.runner_id,
       runnerName: user.runner_name,
+      slotNo: user.slot_no,
       sessionId: session.id,
       userSessionId: userSession.id,
     });

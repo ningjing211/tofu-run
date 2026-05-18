@@ -31,6 +31,47 @@ export async function getOrCreateTodaySession(): Promise<Session> {
   return data as Session;
 }
 
+/** 從 300 名額池領取下一個未使用的跑者（現場掃碼） */
+export async function claimNextPoolUser(
+  lat: number | null,
+  lng: number | null
+): Promise<User | null> {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase.rpc("claim_next_pool_user", {
+    p_lat: lat,
+    p_lng: lng,
+  });
+
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : data;
+  return (row as User) ?? null;
+}
+
+export async function getPoolStats(): Promise<{
+  total: number;
+  claimed: number;
+  remaining: number;
+}> {
+  const supabase = createSupabaseClient();
+
+  const { count: total, error: e1 } = await supabase
+    .from("users")
+    .select("*", { count: "exact", head: true })
+    .not("slot_no", "is", null);
+
+  const { count: claimed, error: e2 } = await supabase
+    .from("users")
+    .select("*", { count: "exact", head: true })
+    .not("slot_no", "is", null)
+    .not("claimed_at", "is", null);
+
+  if (e1 || e2) throw e1 ?? e2;
+
+  const t = total ?? 0;
+  const c = claimed ?? 0;
+  return { total: t, claimed: c, remaining: t - c };
+}
+
 export async function createUser(
   runnerId: string,
   runnerName: string,
