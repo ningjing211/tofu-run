@@ -1,13 +1,14 @@
 import Image from "next/image";
-import { TOKEN_TYPES } from "@/lib/constants";
+import { TOKEN_TYPES, type TokenTypeId } from "@/lib/constants";
 
-const PIN_POSITIONS = [
-  "left-[18%] top-[32%]",
-  "right-[15%] top-[28%]",
-  "left-[28%] bottom-[28%]",
-  "right-[22%] bottom-[38%]",
-  "right-[30%] bottom-[18%]",
-];
+/** 各地圖區 Token 釘點位置（對齊中央公園參考圖） */
+const PIN_POSITIONS: Record<TokenTypeId, string> = {
+  redbean: "left-[12%] top-[11%]",
+  mungbean: "right-[4%] top-[14%]",
+  peanut: "left-[8%] bottom-[4%]",
+  tapioca: "left-[44%] bottom-[6%]",
+  taro: "right-[6%] bottom-[30%]",
+};
 
 const TOKEN_SIZE = 56;
 
@@ -19,16 +20,16 @@ export function ParkMap() {
       </p>
 
       <div className="absolute inset-4 rounded-2xl border border-dashed border-brown-sugar/20" />
-      <div className="absolute left-[12%] top-[28%] h-16 w-20 rounded-full border border-blue-300/30 bg-blue-200/40" />
-      <div className="absolute right-[10%] top-[20%] h-20 w-24 rounded-2xl border border-mung-green/30 bg-mung-green/25" />
-      <div className="absolute bottom-[22%] left-[20%] h-14 w-28 rounded-2xl border border-mung-green/25 bg-mung-green/20" />
-      <div className="absolute bottom-[35%] right-[18%] h-3 w-24 rotate-12 rounded-full bg-brown-sugar/15" />
-      <div className="absolute bottom-[15%] right-[25%] h-12 w-16 rounded-xl border border-brown-sugar/15 bg-tofu-white/80" />
+      <div className="absolute left-[10%] top-[14%] h-16 w-20 rounded-full border border-blue-300/30 bg-blue-200/40" />
+      <div className="absolute right-[6%] top-[16%] h-20 w-24 rounded-2xl border border-mung-green/30 bg-mung-green/25" />
+      <div className="absolute bottom-[6%] left-[6%] h-12 w-20 rounded-2xl border border-mung-green/25 bg-mung-green/20" />
+      <div className="absolute bottom-[8%] left-[38%] h-10 w-16 rounded-xl border border-sunset/20 bg-sunset/10" />
+      <div className="absolute bottom-[28%] right-[8%] h-12 w-14 rounded-xl border border-brown-sugar/15 bg-tofu-white/80" />
 
-      {TOKEN_TYPES.map((token, i) => (
+      {TOKEN_TYPES.map((token) => (
         <div
           key={token.id}
-          className={`absolute ${PIN_POSITIONS[i]} z-10 flex flex-col items-center`}
+          className={`absolute ${PIN_POSITIONS[token.id]} z-10 flex flex-col items-center`}
         >
           <div className="animate-float">
             <Image

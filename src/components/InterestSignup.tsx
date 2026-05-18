@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ToppingPicker } from "@/components/ToppingPicker";
+import {
+  formatDouhuaGoal,
+  type TofuTypeId,
+} from "@/lib/constants";
 
 type Intent = "join" | "interested";
 
@@ -16,6 +21,8 @@ export function InterestSignup() {
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [lineId, setLineId] = useState("");
+  const [toppings, setToppings] = useState<TofuTypeId[]>([]);
+  const [pickNone, setPickNone] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">(
     "idle"
   );
@@ -25,6 +32,10 @@ export function InterestSignup() {
     setIntent(selected);
     setStatus("idle");
     setError(null);
+    if (selected !== "join") {
+      setToppings([]);
+      setPickNone(false);
+    }
   }
 
   function closeForm() {
@@ -32,6 +43,8 @@ export function InterestSignup() {
     setNickname("");
     setEmail("");
     setLineId("");
+    setToppings([]);
+    setPickNone(false);
     setError(null);
     setStatus("idle");
   }
@@ -52,6 +65,17 @@ export function InterestSignup() {
           nickname: nickname.trim(),
           email: email.trim(),
           lineId: lineId.trim() || undefined,
+          preferredToppings:
+            intent === "join"
+              ? pickNone
+                ? ["none"]
+                : toppings
+              : undefined,
+          pureOnly: intent === "join" ? pickNone : undefined,
+          douhuaGoal:
+            intent === "join"
+              ? formatDouhuaGoal(toppings, pickNone)
+              : undefined,
         }),
       });
       const data = await res.json();
@@ -63,11 +87,21 @@ export function InterestSignup() {
     }
   }
 
+  const successGoal =
+    intent === "join" && (pickNone || toppings.length > 0)
+      ? formatDouhuaGoal(toppings, pickNone)
+      : null;
+
   if (status === "success") {
     return (
       <Card className="mb-5 border-2 border-mung-green/25 bg-gradient-to-br from-mung-green/10 to-tofu-white text-center">
         <p className="text-3xl">🥣</p>
         <h2 className="mt-2 text-lg font-semibold text-brown-sugar">收到了！</h2>
+        {successGoal && (
+          <p className="mt-3 rounded-xl bg-cream/80 px-4 py-2 text-base font-semibold text-brown-sugar">
+            目標：{successGoal}
+          </p>
+        )}
         <p className="mt-2 text-sm leading-relaxed text-brown-sugar/75">
           謝謝你留下聯絡方式。
           <br />
@@ -93,7 +127,7 @@ export function InterestSignup() {
         想一起來嗎？
       </h2>
       <p className="mt-2 text-center text-sm leading-relaxed text-brown-sugar/70">
-        還不用掃碼加入，先留個聯絡方式就好。
+        呀呼，先留個聯絡方式就好。
         <br />
         我們會在集合前通知你。
       </p>
@@ -171,6 +205,15 @@ export function InterestSignup() {
               className="w-full rounded-xl border border-brown-sugar/15 bg-cream px-4 py-3 text-sm text-brown-sugar outline-none transition-colors placeholder:text-brown-sugar/35 focus:border-sunset/60 focus:ring-2 focus:ring-sunset/20"
             />
           </label>
+
+          {intent === "join" && (
+            <ToppingPicker
+              selected={toppings}
+              pickNone={pickNone}
+              onChange={setToppings}
+              onPickNone={setPickNone}
+            />
+          )}
 
           {error && (
             <p className="rounded-lg bg-red-bean/10 px-3 py-2 text-xs text-red-bean">

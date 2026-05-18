@@ -16,12 +16,63 @@ export const RUNNER_NAMES = [
 ] as const;
 
 export const TOFU_TYPES = [
-  { id: "redbean", label: "紅豆豆花", emoji: "🫘", color: "#B85C5C" },
-  { id: "mungbean", label: "綠豆豆花", emoji: "🌿", color: "#7BA05B" },
-  { id: "peanut", label: "花生豆花", emoji: "🥜", color: "#C4A574" },
-  { id: "tapioca", label: "粉圓豆花", emoji: "⚪", color: "#9B8B7A" },
-  { id: "taro", label: "芋圓豆花", emoji: "💜", color: "#9B7EBD" },
+  {
+    id: "redbean",
+    label: "紅豆豆花",
+    shortName: "紅豆",
+    emoji: "🫘",
+    color: "#B85C5C",
+    image: "/tokens/redbean.png",
+  },
+  {
+    id: "mungbean",
+    label: "綠豆豆花",
+    shortName: "綠豆",
+    emoji: "🌿",
+    color: "#7BA05B",
+    image: "/tokens/mungbean.png",
+  },
+  {
+    id: "peanut",
+    label: "花生豆花",
+    shortName: "花生",
+    emoji: "🥜",
+    color: "#C4A574",
+    image: "/tokens/peanut.png",
+  },
+  {
+    id: "tapioca",
+    label: "粉圓豆花",
+    shortName: "粉圓",
+    emoji: "⚪",
+    color: "#9B8B7A",
+    image: "/tokens/tapioca.png",
+  },
+  {
+    id: "taro",
+    label: "芋圓豆花",
+    shortName: "芋圓",
+    emoji: "💜",
+    color: "#9B7EBD",
+    image: "/tokens/taro.png",
+  },
 ] as const;
+
+export const MAX_TOPPING_PICKS = 3;
+export const PURE_DOUHUA_GOAL = "純粹豆花";
+
+/** 依選擇的配料 id 組出目標豆花名稱，例如「紅豆花生芋圓豆花」 */
+export function formatDouhuaGoal(
+  toppingIds: string[],
+  pureOnly = false
+): string {
+  if (pureOnly) return PURE_DOUHUA_GOAL;
+  const names = toppingIds
+    .map((id) => TOFU_TYPES.find((t) => t.id === id)?.shortName)
+    .filter(Boolean);
+  if (names.length === 0) return "";
+  return `${names.join("")}豆花`;
+}
 
 export type TofuTypeId = (typeof TOFU_TYPES)[number]["id"];
 
@@ -41,19 +92,19 @@ export const TOKEN_TYPES = [
   {
     id: "peanut",
     label: "花生 Token",
-    zone: "草地區",
+    zone: "城市光廊區",
     image: "/tokens/peanut.png",
   },
   {
     id: "tapioca",
     label: "粉圓 Token",
-    zone: "步道區",
+    zone: "遊戲區",
     image: "/tokens/tapioca.png",
   },
   {
     id: "taro",
     label: "芋圓 Token",
-    zone: "廣場區",
+    zone: "捷運出口區",
     image: "/tokens/taro.png",
   },
 ] as const;
@@ -63,8 +114,8 @@ export type TokenTypeId = (typeof TOKEN_TYPES)[number]["id"];
 export const STORAGE_KEY = "tofu-run-player";
 
 export const GATHERING_SLOTS = [
-  { time: "傍晚 5–6 點", mood: "璀璨夕陽" },
-  { time: "晚間 7–9 點", mood: "夏夜晚風" },
+  { time: "星期一 7:00 PM", mood: "夏夜晚風" },
+  { time: "星期四 6:00 PM", mood: "璀璨夕陽" },
 ] as const;
 
 export function getTofuLabel(id: string | null | undefined): string {

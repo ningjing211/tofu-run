@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { InterestSignup } from "@/components/InterestSignup";
-import { JoinQrCard } from "@/components/JoinQrCard";
 import { PageShell } from "@/components/PageShell";
 import { ParkMap } from "@/components/ParkMap";
 import { TokenIcon } from "@/components/TokenIcon";
@@ -15,9 +13,6 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function HomePage() {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  const joinUrl = `${appUrl}/join`;
-
   return (
     <PageShell>
       <header className="mb-8 text-center">
@@ -39,8 +34,8 @@ export default function HomePage() {
       <Card className="mb-5">
         <h2 className="mb-2 font-semibold text-brown-sugar">這是什麼？</h2>
         <p className="text-sm leading-relaxed text-brown-sugar/80">
-          城市裡的團體加油慢跑遊戲。<br/>掃描 QR 加入、選擇一碗豆花配料、到公園各區掃描獲取美味
-          Token，收集你的豆花護照 — 跑.. 跑.. 跑... 享用你們拾取的豆花。
+          城市裡的團體加油慢跑遊戲。<br/>掃描 QR 加入、選擇一碗豆花配料、到公園各區探尋美味
+          Token，<br/>收集你的豆花護照 — 跑.. 跑.. 跑... 享用你們拾取的豆花。
         </p>
       </Card>
 
@@ -56,12 +51,9 @@ export default function HomePage() {
             </li>
           ))}
         </ul>
-        <p className="mt-1 text-xs text-brown-sugar/60">
-          掃描活動 QR 即可自動取得玩家身份
+        <p className="mt-3 rounded-xl bg-cream/60 px-3 py-2 text-sm leading-relaxed text-brown-sugar/75">
+          現場會提供 QR，掃描即可加入當日的慢跑群。
         </p>
-        <div className="mt-5 flex justify-center border-t border-brown-sugar/10 pt-5">
-          <JoinQrCard />
-        </div>
       </Card>
 
       <section className="mb-5">
@@ -90,17 +82,11 @@ export default function HomePage() {
       </Card>
 
       <div className="space-y-3 pb-4">
-        <Button href="/join" className="w-full">
-          掃碼加入活動 →
-        </Button>
-        <Button href="/lobby" variant="secondary" className="w-full">
+        <Button href="/lobby" className="w-full">
           進入今日 Lobby
         </Button>
         <p className="text-center text-[11px] text-brown-sugar/50">
-          QR 連結：{" "}
-          <Link href="/join" className="underline">
-            {joinUrl}
-          </Link>
+          已於現場掃碼加入的玩家，可由此進入 Lobby
         </p>
       </div>
     </PageShell>
