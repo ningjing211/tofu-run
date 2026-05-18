@@ -239,15 +239,20 @@ export default function PassportPage() {
         </Card>
       )}
 
-      {!hasJoinedToday && signup && !loading && (
-        <Button href="/lobby" className="mb-4 w-full">
-          查看想參加名單
-        </Button>
+      {signup && !loading && (
+        <div className="mb-4 space-y-2">
+          <Button href="/live" className="w-full">
+            進入 LIVE 房間
+          </Button>
+          <Button href="/lobby" variant="secondary" className="w-full">
+            查看想參加名單
+          </Button>
+        </div>
       )}
 
       {hasJoinedToday && (
         <p className="mb-4 text-center text-xs text-mung-green">
-          今日已加入活動，可掃描 Token 與查看 Lobby
+          今日已加入活動，可進 LIVE 或掃描 Token
         </p>
       )}
 

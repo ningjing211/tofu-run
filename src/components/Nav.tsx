@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+const SHOW_LIVE_NAV = false;
+
 const links = [
   { href: "/", label: "首頁" },
   { href: "/lobby", label: "Lobby" },
   { href: "/passport", label: "護照" },
+  ...(SHOW_LIVE_NAV ? [{ href: "/live", label: "LIVE" as const }] : []),
 ];
 
 export function Nav() {
@@ -24,7 +27,7 @@ export function Nav() {
             <Link
               key={link.href}
               href={link.href}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
+              className={`rounded-xl px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm ${
                 active
                   ? "bg-brown-sugar text-cream"
                   : "text-brown-sugar/70 hover:text-brown-sugar"

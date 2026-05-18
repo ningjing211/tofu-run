@@ -4,6 +4,7 @@ import { collectTargetsFromSignup } from "@/lib/toppings";
 import type {
   GoingJoinListEntry,
   GoingSignup,
+  LiveParticipant,
   LobbyPlayer,
   PassportAccount,
   PassportRun,
@@ -12,6 +13,23 @@ import type {
   User,
   UserSession,
 } from "@/types/database";
+
+/** LIVE 在線：最後出現在 /live 的時間在此秒數內 */
+export const LIVE_ONLINE_SECONDS = 120;
+
+function isRpcNotFound(error: { code?: string } | null): boolean {
+  return error?.code === "PGRST202";
+}
+
+function isMissingColumn(
+  error: { code?: string; message?: string } | null,
+  column: string
+): boolean {
+  return (
+    error?.code === "PGRST204" &&
+    (error.message?.includes(column) ?? false)
+  );
+}
 
 export async function getOrCreateTodaySession(): Promise<Session> {
   const supabase = createSupabaseClient();
@@ -159,9 +177,34 @@ export async function claimPoolUserByRunnerId(
     p_lng: lng,
   });
 
-  if (error) throw error;
-  const row = Array.isArray(data) ? data[0] : data;
-  return (row as User) ?? null;
+  if (!error) {
+    const row = Array.isArray(data) ? data[0] : data;
+    return (row as User) ?? null;
+  }
+
+  if (!isRpcNotFound(error)) throw error;
+
+  const existing = await getUserByRunnerId(runnerId);
+  if (!existing) return null;
+
+  const patch: Record<string, string | number> = {};
+  if (!existing.claimed_at) {
+    patch.claimed_at = new Date().toISOString();
+  }
+  if (lat != null && existing.first_lat == null) patch.first_lat = lat;
+  if (lng != null && existing.first_lng == null) patch.first_lng = lng;
+
+  if (Object.keys(patch).length === 0) return existing;
+
+  const { data: updated, error: updateError } = await supabase
+    .from("users")
+    .update(patch)
+    .eq("id", existing.id)
+    .select()
+    .single();
+
+  if (updateError) throw updateError;
+  return updated as User;
 }
 
 export async function getPassportAccount(
@@ -489,6 +532,148 @@ export async function getAdminLobbyRows(sessionId: string) {
       tofu_type: row.tofu_type as string | null,
       completed_at: row.completed_at as string | null,
       joined_at: row.joined_at as string,
+    };
+  });
+}
+
+export async function getTodaySessionMembership(
+  runnerId: string
+): Promise<{
+  userId: string;
+  sessionId: string;
+  userSessionId: string;
+} | null> {
+  const session = await getOrCreateTodaySession();
+  const user = await getUserByRunnerId(runnerId);
+  if (!user) return null;
+
+  const supabase = createSupabaseServiceClient();
+  const { data, error } = await supabase
+    .from("user_sessions")
+    .select("id, user_id, session_id")
+    .eq("user_id", user.id)
+    .eq("session_id", session.id)
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) return null;
+
+  return {
+    userId: data.user_id as string,
+    sessionId: data.session_id as string,
+    userSessionId: data.id as string,
+  };
+}
+
+export async function touchLiveSeen(
+  userId: string,
+  sessionId: string
+): Promise<void> {
+  const supabase = createSupabaseServiceClient();
+  const { error } = await supabase
+    .from("user_sessions")
+    .update({ live_seen_at: new Date().toISOString() })
+    .eq("user_id", userId)
+    .eq("session_id", sessionId);
+
+  if (!error) return;
+  if (isMissingColumn(error, "live_seen_at")) return;
+  throw error;
+}
+
+export async function getLiveParticipants(
+  sessionId: string
+): Promise<LiveParticipant[]> {
+  const supabase = createSupabaseServiceClient();
+
+  const withLiveSelect = `
+      user_id,
+      joined_at,
+      live_seen_at,
+      users!inner (
+        runner_id,
+        runner_name
+      )
+    `;
+
+  let rows: Record<string, unknown>[] | null = null;
+  let trackLiveSeen = true;
+
+  const primary = await supabase
+    .from("user_sessions")
+    .select(withLiveSelect)
+    .eq("session_id", sessionId)
+    .order("joined_at", { ascending: true });
+
+  if (primary.error && isMissingColumn(primary.error, "live_seen_at")) {
+    trackLiveSeen = false;
+    const fallback = await supabase
+      .from("user_sessions")
+      .select(
+        `
+      user_id,
+      joined_at,
+      users!inner (
+        runner_id,
+        runner_name
+      )
+    `
+      )
+      .eq("session_id", sessionId)
+      .order("joined_at", { ascending: true });
+    if (fallback.error) throw fallback.error;
+    rows = (fallback.data ?? []) as Record<string, unknown>[];
+  } else {
+    if (primary.error) throw primary.error;
+    rows = (primary.data ?? []) as Record<string, unknown>[];
+  }
+
+  if (!rows?.length) return [];
+
+  const runnerIds = rows.map((row) => {
+    const user = row.users as unknown as { runner_id: string };
+    return user.runner_id;
+  });
+
+  const { data: signups, error: signupError } = await supabase
+    .from("going_signups")
+    .select("runner_id, nickname, runner_name, goal")
+    .in("runner_id", runnerIds)
+    .eq("intent", "join");
+
+  if (signupError) throw signupError;
+
+  const signupByRunner = new Map(
+    (signups ?? []).map((s) => [s.runner_id as string, s])
+  );
+
+  const onlineCutoff = Date.now() - LIVE_ONLINE_SECONDS * 1000;
+
+  return rows.map((row) => {
+    const user = row.users as unknown as {
+      runner_id: string;
+      runner_name: string;
+    };
+    const signup = signupByRunner.get(user.runner_id);
+    const displayName =
+      (signup?.nickname as string | undefined)?.trim() ||
+      (signup?.runner_name as string | undefined)?.trim() ||
+      user.runner_name;
+    const liveSeen = trackLiveSeen
+      ? (row.live_seen_at as string | null)
+      : null;
+    const isOnline =
+      trackLiveSeen && liveSeen
+        ? new Date(liveSeen).getTime() > onlineCutoff
+        : false;
+
+    return {
+      user_id: row.user_id as string,
+      runner_id: user.runner_id,
+      display_name: displayName,
+      goal: (signup?.goal as string | null) ?? null,
+      joined_at: row.joined_at as string,
+      is_online: isOnline,
     };
   });
 }

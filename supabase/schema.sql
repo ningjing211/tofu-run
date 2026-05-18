@@ -29,6 +29,7 @@ create table if not exists user_sessions (
   tofu_type text,
   completed_at timestamptz,
   joined_at timestamptz not null default now(),
+  live_seen_at timestamptz,
   unique (user_id, session_id)
 );
 

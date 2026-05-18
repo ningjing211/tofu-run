@@ -51,7 +51,8 @@ npm run dev
 |------|------|
 | `/` | 首頁 Landing |
 | `/join` | 掃 QR 加入（自動生成玩家 ID / 名稱） |
-| `/lobby` | 今日 Lobby |
+| `/lobby` | 想參加名單（活動前） |
+| `/live` | 活動當日 LIVE 房間（須 Runner ID 進場） |
 | `/admin` | 管理者分配豆花 |
 | `/scan/[token]` | Checkpoint Token 掃描 |
 | `/passport` | 豆花護照 |
@@ -68,11 +69,21 @@ npm run dev
 {APP_URL}/scan/taro      → 捷運出口區
 ```
 
-加入活動 QR：
+現場 LIVE 房間 QR（須輸入 Runner ID 進場）：
+
+```
+{APP_URL}/live?from=qr
+```
+
+舊版加入頁（可選）：
 
 ```
 {APP_URL}/join
 ```
+
+### LIVE 資料庫
+
+在 Supabase 執行 [`supabase/add_live_seen_at.sql`](./supabase/add_live_seen_at.sql)，為 `user_sessions` 新增 `live_seen_at` 欄位（在線綠 ✓ 用）。
 
 ## 管理者流程
 

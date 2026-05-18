@@ -20,7 +20,7 @@ export function createMetadata({
     ? `${title} | ${siteConfig.name}`
     : `${siteConfig.name} | ${siteConfig.nameEn}`;
   const canonical = absoluteUrl(path);
-  const ogImage = absoluteUrl("/opengraph-image");
+  const ogImage = absoluteUrl(siteConfig.ogImage);
 
   return {
     metadataBase: new URL(siteConfig.url),
@@ -64,7 +64,8 @@ export function createMetadata({
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: `${siteConfig.name} — ${siteConfig.tagline}`,
+          alt: `${siteConfig.name} — 慢跑 RUN`,
+          type: "image/jpeg",
         },
       ],
     },

@@ -22,6 +22,17 @@ export type UserSession = {
   tofu_type: string | null;
   completed_at: string | null;
   joined_at: string;
+  live_seen_at: string | null;
+};
+
+/** LIVE 房間：今日已進場參加者 */
+export type LiveParticipant = {
+  user_id: string;
+  runner_id: string;
+  display_name: string;
+  goal: string | null;
+  joined_at: string;
+  is_online: boolean;
 };
 
 export type Token = {
