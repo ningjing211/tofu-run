@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { InterestSignup } from "@/components/InterestSignup";
 import { JoinQrCard } from "@/components/JoinQrCard";
 import { PageShell } from "@/components/PageShell";
 import { ParkMap } from "@/components/ParkMap";
@@ -26,16 +27,18 @@ export default function HomePage() {
         </p>
       </header>
 
+      <InterestSignup />
+
       <Card className="mb-5">
         <h2 className="mb-2 font-semibold text-brown-sugar">這是什麼？</h2>
         <p className="text-sm leading-relaxed text-brown-sugar/80">
-          城市裡的團體加油慢跑遊戲。掃描 QR 加入、選擇一碗豆花配料、到公園各區掃描獲取美味
+          城市裡的團體加油慢跑遊戲。<br/>掃描 QR 加入、選擇一碗豆花配料、到公園各區掃描獲取美味
           Token，收集你的豆花護照 — 跑.. 跑.. 跑... 享用你們拾取的豆花。
         </p>
       </Card>
 
       <Card className="mb-5 bg-gradient-to-br from-sunset/10 to-tofu-white">
-        <h2 className="mb-2 font-semibold text-brown-sugar">平日集合</h2>
+        <h2 className="mb-2 font-semibold text-brown-sugar">平日集合的瞬間</h2>
         <ul className="space-y-2">
           {GATHERING_SLOTS.map((slot) => (
             <li key={slot.time} className="text-base font-medium text-red-bean">

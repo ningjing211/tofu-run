@@ -1,0 +1,201 @@
+"use client";
+
+import { useState } from "react";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+
+type Intent = "join" | "interested";
+
+const INTENT_LABEL: Record<Intent, string> = {
+  join: "想參加",
+  interested: "有興趣",
+};
+
+export function InterestSignup() {
+  const [intent, setIntent] = useState<Intent | null>(null);
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [lineId, setLineId] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">(
+    "idle"
+  );
+  const [error, setError] = useState<string | null>(null);
+
+  function openForm(selected: Intent) {
+    setIntent(selected);
+    setStatus("idle");
+    setError(null);
+  }
+
+  function closeForm() {
+    setIntent(null);
+    setNickname("");
+    setEmail("");
+    setLineId("");
+    setError(null);
+    setStatus("idle");
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!intent) return;
+
+    setStatus("submitting");
+    setError(null);
+
+    try {
+      const res = await fetch("/api/interest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          intent,
+          nickname: nickname.trim(),
+          email: email.trim(),
+          lineId: lineId.trim() || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "送出失敗");
+      setStatus("success");
+    } catch (err) {
+      setStatus("error");
+      setError(err instanceof Error ? err.message : "送出失敗，請稍後再試");
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <Card className="mb-5 border-2 border-mung-green/25 bg-gradient-to-br from-mung-green/10 to-tofu-white text-center">
+        <p className="text-3xl">🥣</p>
+        <h2 className="mt-2 text-lg font-semibold text-brown-sugar">收到了！</h2>
+        <p className="mt-2 text-sm leading-relaxed text-brown-sugar/75">
+          謝謝你留下聯絡方式。
+          <br />
+          活動消息會寄到你的信箱，到時候中央公園見。
+        </p>
+        <button
+          type="button"
+          onClick={closeForm}
+          className="mt-5 text-xs text-brown-sugar/50 underline"
+        >
+          關閉
+        </button>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="mb-5 overflow-hidden border-2 border-brown-sugar/10 bg-gradient-to-br from-cream to-tofu-white">
+      <p className="text-center text-xs font-medium tracking-wide text-sunset">
+        活動預告
+      </p>
+      <h2 className="mt-1 text-center text-lg font-semibold text-brown-sugar">
+        想一起來嗎？
+      </h2>
+      <p className="mt-2 text-center text-sm leading-relaxed text-brown-sugar/70">
+        還不用掃碼加入，先留個聯絡方式就好。
+        <br />
+        我們會在集合前通知你。
+      </p>
+
+      {!intent ? (
+        <div className="mt-5 flex gap-3">
+          <button
+            type="button"
+            onClick={() => openForm("join")}
+            className="flex-1 rounded-2xl bg-brown-sugar px-4 py-3.5 text-sm font-medium text-cream shadow-md shadow-brown-sugar/15 transition-transform active:scale-[0.98]"
+          >
+            想參加
+          </button>
+          <button
+            type="button"
+            onClick={() => openForm("interested")}
+            className="flex-1 rounded-2xl border-2 border-brown-sugar/20 bg-cream px-4 py-3.5 text-sm font-medium text-brown-sugar transition-colors hover:border-brown-sugar/35 active:scale-[0.98]"
+          >
+            有興趣
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+          <p className="rounded-xl bg-sunset/10 px-3 py-2 text-center text-xs text-brown-sugar">
+            你選了：
+            <span className="font-semibold"> {INTENT_LABEL[intent]}</span>
+            <button
+              type="button"
+              onClick={() => setIntent(null)}
+              className="ml-2 text-brown-sugar/50 underline"
+            >
+              改選
+            </button>
+          </p>
+
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-medium text-brown-sugar/70">
+              暱稱
+            </span>
+            <input
+              type="text"
+              required
+              maxLength={24}
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="例如：小綠豆、粉圓旅人"
+              className="w-full rounded-xl border border-brown-sugar/15 bg-cream px-4 py-3 text-sm text-brown-sugar outline-none transition-colors placeholder:text-brown-sugar/35 focus:border-sunset/60 focus:ring-2 focus:ring-sunset/20"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-medium text-brown-sugar/70">
+              Email
+            </span>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              className="w-full rounded-xl border border-brown-sugar/15 bg-cream px-4 py-3 text-sm text-brown-sugar outline-none transition-colors placeholder:text-brown-sugar/35 focus:border-sunset/60 focus:ring-2 focus:ring-sunset/20"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 flex items-baseline gap-1.5 text-xs font-medium text-brown-sugar/70">
+              Line ID
+              <span className="font-normal text-brown-sugar/40">(optional)</span>
+            </span>
+            <input
+              type="text"
+              value={lineId}
+              onChange={(e) => setLineId(e.target.value)}
+              placeholder="@your_line_id"
+              className="w-full rounded-xl border border-brown-sugar/15 bg-cream px-4 py-3 text-sm text-brown-sugar outline-none transition-colors placeholder:text-brown-sugar/35 focus:border-sunset/60 focus:ring-2 focus:ring-sunset/20"
+            />
+          </label>
+
+          {error && (
+            <p className="rounded-lg bg-red-bean/10 px-3 py-2 text-xs text-red-bean">
+              {error}
+            </p>
+          )}
+
+          <div className="flex gap-2 pt-1">
+            <Button
+              type="submit"
+              className="flex-1"
+              disabled={status === "submitting"}
+            >
+              {status === "submitting" ? "送出中…" : "送出"}
+            </Button>
+            <button
+              type="button"
+              onClick={closeForm}
+              className="rounded-2xl px-4 py-3 text-sm text-brown-sugar/60 hover:text-brown-sugar"
+            >
+              取消
+            </button>
+          </div>
+        </form>
+      )}
+    </Card>
+  );
+}
