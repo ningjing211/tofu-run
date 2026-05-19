@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { useLobbyList } from "@/hooks/useLobbyList";
 import { useStoredGoingAccount } from "@/hooks/useStoredGoingAccount";
+import { formatSignupDateTime } from "@/lib/formatSignupTime";
 
 export default function LobbyPage() {
   const { signups, count, loading, refreshing, error, reload } = useLobbyList();
@@ -95,6 +96,9 @@ export default function LobbyPage() {
               const isMe = me?.runnerId === s.runner_id;
               const displayName =
                 s.nickname?.trim() || s.runner_name?.trim() || "—";
+              const signedUpAt = s.created_at
+                ? formatSignupDateTime(s.created_at)
+                : null;
 
               return (
                 <li
@@ -116,11 +120,22 @@ export default function LobbyPage() {
                       </p>
                     )}
                   </div>
-                  {isMe && (
-                    <span className="shrink-0 rounded-full bg-sunset/20 px-2 py-0.5 text-[10px] font-medium text-brown-sugar">
-                      你
-                    </span>
-                  )}
+                  <div className="flex shrink-0 flex-col items-end gap-1">
+                    {signedUpAt && (
+                      <time
+                        dateTime={s.created_at}
+                        className="flex items-center gap-1.5 whitespace-nowrap text-[10px] tabular-nums text-brown-sugar/45"
+                      >
+                        <span>{signedUpAt.date}</span>
+                        <span>{signedUpAt.time}</span>
+                      </time>
+                    )}
+                    {isMe && (
+                      <span className="rounded-full bg-sunset/20 px-2 py-0.5 text-[10px] font-medium text-brown-sugar">
+                        你
+                      </span>
+                    )}
+                  </div>
                 </li>
               );
             })}

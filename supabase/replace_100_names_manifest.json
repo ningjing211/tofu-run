@@ -1,0 +1,706 @@
+{
+  "generated_at": "2026-05-19T04:10:57.442Z",
+  "description": "100 random slots from tofu_run_players_300_with_index.csv received runner_name from new-tofu_run_players_300_music_version.csv (runner_id unchanged)",
+  "changes": [
+    {
+      "slot_no": 21,
+      "runner_id": "TOF-680",
+      "old_runner_name": "衝浪月光勇者",
+      "new_runner_name": "仙人掌藍蓮花",
+      "new_source_no": "167"
+    },
+    {
+      "slot_no": 117,
+      "runner_id": "YAY-535",
+      "old_runner_name": "發光吉他手",
+      "new_runner_name": "可愛女人浪漫探測器",
+      "new_source_no": "117"
+    },
+    {
+      "slot_no": 58,
+      "runner_id": "MIX-160",
+      "old_runner_name": "炸裂飯糰",
+      "new_runner_name": "小幸運的海豚號",
+      "new_source_no": "076"
+    },
+    {
+      "slot_no": 110,
+      "runner_id": "HOP-915",
+      "old_runner_name": "漂流飛天火鍋",
+      "new_runner_name": "散步指南愛情轉移",
+      "new_source_no": "073"
+    },
+    {
+      "slot_no": 244,
+      "runner_id": "RUN-175",
+      "old_runner_name": "流星御飯糰",
+      "new_runner_name": "城市探險天天想你",
+      "new_source_no": "075"
+    },
+    {
+      "slot_no": 175,
+      "runner_id": "MIL-646",
+      "old_runner_name": "微糖豆花王",
+      "new_runner_name": "旅行的意義電音列車",
+      "new_source_no": "210"
+    },
+    {
+      "slot_no": 248,
+      "runner_id": "RAM-402",
+      "old_runner_name": "黑糖浪漫的冰淇淋",
+      "new_runner_name": "獨家記憶城市探險",
+      "new_source_no": "257"
+    },
+    {
+      "slot_no": 234,
+      "runner_id": "CAT-170",
+      "old_runner_name": "黑糖恐龍",
+      "new_runner_name": "夜跑部雨天",
+      "new_source_no": "209"
+    },
+    {
+      "slot_no": 290,
+      "runner_id": "CBD-229",
+      "old_runner_name": "水母御飯糰",
+      "new_runner_name": "浪漫探測器龍捲風",
+      "new_source_no": "289"
+    },
+    {
+      "slot_no": 81,
+      "runner_id": "FLY-383",
+      "old_runner_name": "滾動的烏龍麵",
+      "new_runner_name": "我願意慢跑王",
+      "new_source_no": "122"
+    },
+    {
+      "slot_no": 57,
+      "runner_id": "ZEN-597",
+      "old_runner_name": "仙人掌冰淇淋",
+      "new_runner_name": "愛很簡單慢跑王",
+      "new_source_no": "006"
+    },
+    {
+      "slot_no": 224,
+      "runner_id": "JAZ-293",
+      "old_runner_name": "夏日海邊摩天輪",
+      "new_runner_name": "突然好想你夜跑部",
+      "new_source_no": "217"
+    },
+    {
+      "slot_no": 197,
+      "runner_id": "CAT-140",
+      "old_runner_name": "DJ向日葵",
+      "new_runner_name": "雨天小宇宙",
+      "new_source_no": "238"
+    },
+    {
+      "slot_no": 272,
+      "runner_id": "DMT-802",
+      "old_runner_name": "大俠流星",
+      "new_runner_name": "小火車浪人情歌",
+      "new_source_no": "064"
+    },
+    {
+      "slot_no": 77,
+      "runner_id": "MNG-218",
+      "old_runner_name": "野生章魚",
+      "new_runner_name": "彩虹旅人心太軟",
+      "new_source_no": "015"
+    },
+    {
+      "slot_no": 161,
+      "runner_id": "TOF-463",
+      "old_runner_name": "烏龍麵西瓜",
+      "new_runner_name": "我願意流浪記",
+      "new_source_no": "160"
+    },
+    {
+      "slot_no": 282,
+      "runner_id": "EPS-278",
+      "old_runner_name": "流浪記貓咪",
+      "new_runner_name": "你是我的花朵的夜跑部",
+      "new_source_no": "219"
+    },
+    {
+      "slot_no": 155,
+      "runner_id": "RUN-851",
+      "old_runner_name": "微糖檸檬大俠",
+      "new_runner_name": "衝浪隊騎士精神",
+      "new_source_no": "051"
+    },
+    {
+      "slot_no": 84,
+      "runner_id": "DMT-177",
+      "old_runner_name": "超速夢幻豆花王",
+      "new_runner_name": "孤單北半球與冰淇淋",
+      "new_source_no": "234"
+    },
+    {
+      "slot_no": 208,
+      "runner_id": "WAV-990",
+      "old_runner_name": "神秘泡泡流浪記",
+      "new_runner_name": "心太軟城市探險",
+      "new_source_no": "138"
+    },
+    {
+      "slot_no": 70,
+      "runner_id": "JOY-234",
+      "old_runner_name": "粉紅神秘DJ",
+      "new_runner_name": "戀曲1990的流浪記",
+      "new_source_no": "115"
+    },
+    {
+      "slot_no": 182,
+      "runner_id": "DMT-671",
+      "old_runner_name": "向日葵向日葵",
+      "new_runner_name": "星晴與慢跑王",
+      "new_source_no": "204"
+    },
+    {
+      "slot_no": 141,
+      "runner_id": "BEE-652",
+      "old_runner_name": "銀河恐龍",
+      "new_runner_name": "勇氣的小宇宙",
+      "new_source_no": "216"
+    },
+    {
+      "slot_no": 281,
+      "runner_id": "SKY-908",
+      "old_runner_name": "電音DJ",
+      "new_runner_name": "聽海與冰淇淋",
+      "new_source_no": "102"
+    },
+    {
+      "slot_no": 298,
+      "runner_id": "FLY-187",
+      "old_runner_name": "慢速忍者",
+      "new_runner_name": "小宇宙心太軟",
+      "new_source_no": "059"
+    },
+    {
+      "slot_no": 200,
+      "runner_id": "YAY-874",
+      "old_runner_name": "愛情吉他手",
+      "new_runner_name": "最初的地方與流浪記",
+      "new_source_no": "057"
+    },
+    {
+      "slot_no": 172,
+      "runner_id": "BEE-595",
+      "old_runner_name": "御飯糰吉他手",
+      "new_runner_name": "藍蓮花豆花旅人",
+      "new_source_no": "023"
+    },
+    {
+      "slot_no": 64,
+      "runner_id": "ICE-182",
+      "old_runner_name": "失眠向日葵",
+      "new_runner_name": "我願意微糖宇航員",
+      "new_source_no": "269"
+    },
+    {
+      "slot_no": 249,
+      "runner_id": "MNG-108",
+      "old_runner_name": "熱血草莓勇者",
+      "new_runner_name": "草莓塔不說出口",
+      "new_source_no": "097"
+    },
+    {
+      "slot_no": 31,
+      "runner_id": "ZEN-261",
+      "old_runner_name": "飯糰番茄",
+      "new_runner_name": "愛情轉移浪漫探測器",
+      "new_source_no": "244"
+    },
+    {
+      "slot_no": 150,
+      "runner_id": "JAZ-800",
+      "old_runner_name": "暴走海邊豆花王",
+      "new_runner_name": "微糖宇航員心太軟",
+      "new_source_no": "135"
+    },
+    {
+      "slot_no": 47,
+      "runner_id": "BEA-385",
+      "old_runner_name": "幸運月光大俠",
+      "new_runner_name": "天天想你夜跑部",
+      "new_source_no": "124"
+    },
+    {
+      "slot_no": 38,
+      "runner_id": "CBD-849",
+      "old_runner_name": "旅人大俠",
+      "new_runner_name": "曖昧的冰淇淋",
+      "new_source_no": "232"
+    },
+    {
+      "slot_no": 79,
+      "runner_id": "WAV-749",
+      "old_runner_name": "兔子勇者",
+      "new_runner_name": "旅行的意義香蕉船",
+      "new_source_no": "186"
+    },
+    {
+      "slot_no": 162,
+      "runner_id": "MIX-710",
+      "old_runner_name": "微糖野生飯糰",
+      "new_runner_name": "三輪車天天想你",
+      "new_source_no": "185"
+    },
+    {
+      "slot_no": 270,
+      "runner_id": "CAT-517",
+      "old_runner_name": "豆花王哈士奇",
+      "new_runner_name": "微糖宇航員旅行的意義",
+      "new_source_no": "099"
+    },
+    {
+      "slot_no": 235,
+      "runner_id": "BEE-192",
+      "old_runner_name": "忍者忍者",
+      "new_runner_name": "挪威的森林流浪記",
+      "new_source_no": "282"
+    },
+    {
+      "slot_no": 66,
+      "runner_id": "MIX-683",
+      "old_runner_name": "電音向日葵",
+      "new_runner_name": "豆花旅人愛情轉移",
+      "new_source_no": "163"
+    },
+    {
+      "slot_no": 267,
+      "runner_id": "BEA-650",
+      "old_runner_name": "炸裂麵包",
+      "new_runner_name": "盛夏光年與飯糰",
+      "new_source_no": "032"
+    },
+    {
+      "slot_no": 121,
+      "runner_id": "ZEN-950",
+      "old_runner_name": "無敵漂流太空人",
+      "new_runner_name": "散步指南浪人情歌",
+      "new_source_no": "129"
+    },
+    {
+      "slot_no": 138,
+      "runner_id": "MNG-488",
+      "old_runner_name": "仙人掌麵包",
+      "new_runner_name": "流浪記一個人",
+      "new_source_no": "082"
+    },
+    {
+      "slot_no": 227,
+      "runner_id": "POP-137",
+      "old_runner_name": "開心御飯糰",
+      "new_runner_name": "星空香蕉船",
+      "new_source_no": "191"
+    },
+    {
+      "slot_no": 116,
+      "runner_id": "JOY-349",
+      "old_runner_name": "滾動的忍者",
+      "new_runner_name": "雨天飯糰",
+      "new_source_no": "270"
+    },
+    {
+      "slot_no": 85,
+      "runner_id": "FLY-478",
+      "old_runner_name": "野生超速海豚",
+      "new_runner_name": "藍蓮花海豚號",
+      "new_source_no": "116"
+    },
+    {
+      "slot_no": 174,
+      "runner_id": "BEA-469",
+      "old_runner_name": "粉紅飯糰",
+      "new_runner_name": "星晴和慢跑王",
+      "new_source_no": "123"
+    },
+    {
+      "slot_no": 146,
+      "runner_id": "CAT-721",
+      "old_runner_name": "暴走漂流宇航員",
+      "new_runner_name": "簡單愛和豆花旅人",
+      "new_source_no": "003"
+    },
+    {
+      "slot_no": 83,
+      "runner_id": "LUV-822",
+      "old_runner_name": "魔法師飯糰",
+      "new_runner_name": "倔強和三輪車",
+      "new_source_no": "181"
+    },
+    {
+      "slot_no": 258,
+      "runner_id": "HOP-402",
+      "old_runner_name": "彩虹暴走麵包",
+      "new_runner_name": "小火車曖昧",
+      "new_source_no": "279"
+    },
+    {
+      "slot_no": 25,
+      "runner_id": "SKY-324",
+      "old_runner_name": "開心勇者",
+      "new_runner_name": "盛夏光年的散步指南",
+      "new_source_no": "061"
+    },
+    {
+      "slot_no": 245,
+      "runner_id": "LOL-754",
+      "old_runner_name": "番茄麵包",
+      "new_runner_name": "陰天慢跑王",
+      "new_source_no": "111"
+    },
+    {
+      "slot_no": 45,
+      "runner_id": "BEA-107",
+      "old_runner_name": "熱血恐龍",
+      "new_runner_name": "奶茶騎士親愛的你",
+      "new_source_no": "120"
+    },
+    {
+      "slot_no": 254,
+      "runner_id": "SKY-849",
+      "old_runner_name": "飛天火鍋",
+      "new_runner_name": "黑色幽默和散步指南",
+      "new_source_no": "041"
+    },
+    {
+      "slot_no": 256,
+      "runner_id": "OMG-905",
+      "old_runner_name": "甜甜憂鬱兔子",
+      "new_runner_name": "星球計畫小幸運",
+      "new_source_no": "230"
+    },
+    {
+      "slot_no": 189,
+      "runner_id": "POP-398",
+      "old_runner_name": "深夜火鍋",
+      "new_runner_name": "奶茶騎士龍捲風",
+      "new_source_no": "273"
+    },
+    {
+      "slot_no": 41,
+      "runner_id": "WOW-652",
+      "old_runner_name": "快樂粉紅冰淇淋",
+      "new_runner_name": "心太軟的星球計畫",
+      "new_source_no": "157"
+    },
+    {
+      "slot_no": 133,
+      "runner_id": "MNG-546",
+      "old_runner_name": "阿土伯摩天輪",
+      "new_runner_name": "倔強與冰淇淋",
+      "new_source_no": "127"
+    },
+    {
+      "slot_no": 292,
+      "runner_id": "ICE-401",
+      "old_runner_name": "兔子向日葵",
+      "new_runner_name": "龍捲風星球計畫",
+      "new_source_no": "114"
+    },
+    {
+      "slot_no": 35,
+      "runner_id": "YAY-643",
+      "old_runner_name": "草莓DJ",
+      "new_runner_name": "孤單北半球和夜跑部",
+      "new_source_no": "229"
+    },
+    {
+      "slot_no": 89,
+      "runner_id": "WOW-342",
+      "old_runner_name": "發光珍奶",
+      "new_runner_name": "陰天冰淇淋",
+      "new_source_no": "245"
+    },
+    {
+      "slot_no": 122,
+      "runner_id": "MOO-365",
+      "old_runner_name": "微糖吉他手",
+      "new_runner_name": "雨天的奶茶騎士",
+      "new_source_no": "231"
+    },
+    {
+      "slot_no": 43,
+      "runner_id": "MOO-223",
+      "old_runner_name": "深夜旅人",
+      "new_runner_name": "豆花旅人可愛女人",
+      "new_source_no": "110"
+    },
+    {
+      "slot_no": 246,
+      "runner_id": "JAZ-409",
+      "old_runner_name": "炸裂太空人",
+      "new_runner_name": "星空和星球計畫",
+      "new_source_no": "009"
+    },
+    {
+      "slot_no": 211,
+      "runner_id": "OMG-394",
+      "old_runner_name": "勇者老師",
+      "new_runner_name": "城市探險星晴",
+      "new_source_no": "141"
+    },
+    {
+      "slot_no": 118,
+      "runner_id": "MOO-151",
+      "old_runner_name": "夏日暴走麵包",
+      "new_runner_name": "七里香小火車",
+      "new_source_no": "250"
+    },
+    {
+      "slot_no": 28,
+      "runner_id": "JOY-490",
+      "old_runner_name": "神秘憂鬱番茄",
+      "new_runner_name": "慢跑王星空",
+      "new_source_no": "013"
+    },
+    {
+      "slot_no": 128,
+      "runner_id": "ZEN-163",
+      "old_runner_name": "泡泡摩天輪",
+      "new_runner_name": "電音列車七里香",
+      "new_source_no": "295"
+    },
+    {
+      "slot_no": 7,
+      "runner_id": "MIL-532",
+      "old_runner_name": "西瓜章魚",
+      "new_runner_name": "衝浪隊挪威的森林",
+      "new_source_no": "087"
+    },
+    {
+      "slot_no": 289,
+      "runner_id": "CBD-182",
+      "old_runner_name": "向日葵章魚",
+      "new_runner_name": "獨家記憶慢跑王",
+      "new_source_no": "155"
+    },
+    {
+      "slot_no": 170,
+      "runner_id": "BEE-297",
+      "old_runner_name": "老師大俠",
+      "new_runner_name": "星晴跑跑日記",
+      "new_source_no": "262"
+    },
+    {
+      "slot_no": 145,
+      "runner_id": "TOF-576",
+      "old_runner_name": "冬季甜甜香蕉",
+      "new_runner_name": "曖昧香蕉船",
+      "new_source_no": "280"
+    },
+    {
+      "slot_no": 30,
+      "runner_id": "YAY-373",
+      "old_runner_name": "彩虹暴走火鍋",
+      "new_runner_name": "心太軟電音列車",
+      "new_source_no": "205"
+    },
+    {
+      "slot_no": 201,
+      "runner_id": "DOG-552",
+      "old_runner_name": "草莓御飯糰",
+      "new_runner_name": "雨天與海豚號",
+      "new_source_no": "152"
+    },
+    {
+      "slot_no": 190,
+      "runner_id": "MIL-389",
+      "old_runner_name": "神秘失眠恐龍",
+      "new_runner_name": "曖昧城市探險",
+      "new_source_no": "142"
+    },
+    {
+      "slot_no": 202,
+      "runner_id": "ZEN-750",
+      "old_runner_name": "火箭太空人",
+      "new_runner_name": "飯糰獨家記憶",
+      "new_source_no": "278"
+    },
+    {
+      "slot_no": 165,
+      "runner_id": "MOO-911",
+      "old_runner_name": "飛天火鍋",
+      "new_runner_name": "突然好想你電音列車",
+      "new_source_no": "261"
+    },
+    {
+      "slot_no": 291,
+      "runner_id": "LUV-829",
+      "old_runner_name": "摩天輪向日葵",
+      "new_runner_name": "星空和豆花旅人",
+      "new_source_no": "130"
+    },
+    {
+      "slot_no": 62,
+      "runner_id": "ABC-865",
+      "old_runner_name": "流浪記流浪記",
+      "new_runner_name": "浪漫探測器雨天",
+      "new_source_no": "292"
+    },
+    {
+      "slot_no": 233,
+      "runner_id": "SUN-741",
+      "old_runner_name": "幸運夢幻豆花王",
+      "new_runner_name": "親愛的你冰淇淋",
+      "new_source_no": "227"
+    },
+    {
+      "slot_no": 67,
+      "runner_id": "ABC-734",
+      "old_runner_name": "泡泡御飯糰",
+      "new_runner_name": "草莓塔不說出口",
+      "new_source_no": "104"
+    },
+    {
+      "slot_no": 252,
+      "runner_id": "WAV-873",
+      "old_runner_name": "可愛宇宙豆花王",
+      "new_runner_name": "電音列車你是我的花朵",
+      "new_source_no": "236"
+    },
+    {
+      "slot_no": 73,
+      "runner_id": "TOF-618",
+      "old_runner_name": "貓咪流星",
+      "new_runner_name": "海豚號親愛的你",
+      "new_source_no": "071"
+    },
+    {
+      "slot_no": 49,
+      "runner_id": "HOP-584",
+      "old_runner_name": "小籠包忍者",
+      "new_runner_name": "孤單北半球與跑跑日記",
+      "new_source_no": "126"
+    },
+    {
+      "slot_no": 48,
+      "runner_id": "OMG-840",
+      "old_runner_name": "海邊愛情企鵝",
+      "new_runner_name": "散步指南後來",
+      "new_source_no": "146"
+    },
+    {
+      "slot_no": 263,
+      "runner_id": "POP-125",
+      "old_runner_name": "野生衝浪水母",
+      "new_runner_name": "藍蓮花冰淇淋",
+      "new_source_no": "094"
+    },
+    {
+      "slot_no": 226,
+      "runner_id": "BEE-584",
+      "old_runner_name": "炸裂炸裂章魚",
+      "new_runner_name": "後來和浪漫探測器",
+      "new_source_no": "029"
+    },
+    {
+      "slot_no": 223,
+      "runner_id": "YAY-656",
+      "old_runner_name": "麵包DJ",
+      "new_runner_name": "浪漫探測器你是我的花朵",
+      "new_source_no": "225"
+    },
+    {
+      "slot_no": 277,
+      "runner_id": "TOF-700",
+      "old_runner_name": "深夜烏龍麵",
+      "new_runner_name": "天天想你的星球計畫",
+      "new_source_no": "132"
+    },
+    {
+      "slot_no": 140,
+      "runner_id": "MNG-954",
+      "old_runner_name": "愛情阿土伯",
+      "new_runner_name": "小幸運散步指南",
+      "new_source_no": "211"
+    },
+    {
+      "slot_no": 173,
+      "runner_id": "CAT-389",
+      "old_runner_name": "快樂火鍋",
+      "new_runner_name": "跑跑日記天天想你",
+      "new_source_no": "049"
+    },
+    {
+      "slot_no": 209,
+      "runner_id": "TOF-630",
+      "old_runner_name": "水母勇者",
+      "new_runner_name": "我願意與小宇宙",
+      "new_source_no": "037"
+    },
+    {
+      "slot_no": 126,
+      "runner_id": "BEA-492",
+      "old_runner_name": "超速月光旅人",
+      "new_runner_name": "電音列車聽海",
+      "new_source_no": "074"
+    },
+    {
+      "slot_no": 181,
+      "runner_id": "OMG-252",
+      "old_runner_name": "粉紅飛天企鵝",
+      "new_runner_name": "龍捲風的夜跑部",
+      "new_source_no": "109"
+    },
+    {
+      "slot_no": 143,
+      "runner_id": "TOF-959",
+      "old_runner_name": "檸檬章魚",
+      "new_runner_name": "陰天與小宇宙",
+      "new_source_no": "005"
+    },
+    {
+      "slot_no": 108,
+      "runner_id": "TOF-540",
+      "old_runner_name": "草莓衝浪麵包",
+      "new_runner_name": "跑跑日記孤單北半球",
+      "new_source_no": "224"
+    },
+    {
+      "slot_no": 15,
+      "runner_id": "MNG-564",
+      "old_runner_name": "甜甜漂流哈士奇",
+      "new_runner_name": "星空浪漫探測器",
+      "new_source_no": "147"
+    },
+    {
+      "slot_no": 115,
+      "runner_id": "MIX-744",
+      "old_runner_name": "快樂炸裂勇者",
+      "new_runner_name": "小宇宙星空",
+      "new_source_no": "091"
+    },
+    {
+      "slot_no": 240,
+      "runner_id": "CBD-724",
+      "old_runner_name": "水母企鵝",
+      "new_runner_name": "小幸運浪漫探測器",
+      "new_source_no": "291"
+    },
+    {
+      "slot_no": 169,
+      "runner_id": "MNG-413",
+      "old_runner_name": "恐龍老師",
+      "new_runner_name": "豆花旅人騎士精神",
+      "new_source_no": "043"
+    },
+    {
+      "slot_no": 132,
+      "runner_id": "HOP-717",
+      "old_runner_name": "幸運恐龍",
+      "new_runner_name": "小火車聽海",
+      "new_source_no": "271"
+    },
+    {
+      "slot_no": 163,
+      "runner_id": "ICE-295",
+      "old_runner_name": "夏日珍奶",
+      "new_runner_name": "曖昧飯糰",
+      "new_source_no": "151"
+    }
+  ]
+}
