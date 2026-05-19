@@ -41,16 +41,19 @@ export default function HomePage() {
         </p>
       </Card>
 
-      <div className="mb-5 overflow-hidden rounded-2xl">
-        <Image
-          src="/run.intro.jpg"
-          alt="豆花星球居民角色設定：開跑、衝線、補充能量與表情包"
-          width={1254}
-          height={1254}
-          className="h-auto w-full"
-          sizes="(max-width: 448px) 100vw, 400px"
-        />
-      </div>
+      <Card className="mb-5">
+        <h2 className="mb-3 font-semibold text-brown-sugar">遊戲設定</h2>
+        <div className="overflow-hidden rounded-2xl border border-brown-sugar/10 bg-cream/40">
+          <Image
+            src="/run.intro.jpg"
+            alt="豆花星球居民角色設定：開跑、衝線、補充能量與表情包"
+            width={1254}
+            height={1254}
+            className="h-auto w-full"
+            sizes="(max-width: 448px) 100vw, 400px"
+          />
+        </div>
+      </Card>
 
       <Card className="mb-5 bg-gradient-to-br from-sunset/10 to-tofu-white">
         <h2 className="mb-2 font-semibold text-brown-sugar">平日集合的瞬間</h2>
