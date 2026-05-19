@@ -98,7 +98,7 @@ export const TOKEN_TYPES = [
   {
     id: "tapioca",
     label: "粉圓 Token",
-    zone: "遊戲區",
+    zone: "草地區",
     image: "/tokens/tapioca.png",
   },
   {

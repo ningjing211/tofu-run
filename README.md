@@ -65,7 +65,7 @@ npm run dev
 {APP_URL}/scan/redbean   → 水池區
 {APP_URL}/scan/mungbean  → 樹林區
 {APP_URL}/scan/peanut    → 城市光廊區
-{APP_URL}/scan/tapioca   → 遊戲區
+{APP_URL}/scan/tapioca   → 草地區
 {APP_URL}/scan/taro      → 捷運出口區
 ```
 
