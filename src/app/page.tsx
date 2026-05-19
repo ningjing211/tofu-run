@@ -42,7 +42,7 @@ export default function HomePage() {
       </Card>
 
       <Card className="mb-5">
-        <h2 className="mb-3 font-semibold text-brown-sugar">遊戲設定</h2>
+        {/* <h2 className="mb-3 font-semibold text-brown-sugar">遊戲設定</h2> */}
         <div className="overflow-hidden rounded-2xl border border-brown-sugar/10 bg-cream/40">
           <Image
             src="/run.intro.jpg"
