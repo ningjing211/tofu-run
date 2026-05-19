@@ -1,3 +1,18 @@
+/** 網站根網址（SEO、OG、sitemap）。Vercel 未設 NEXT_PUBLIC_APP_URL 時用部署網域，避免 og:image 變 localhost */
+function getSiteUrl(): string {
+  const fromEnv = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+
+  const vercelHost =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  if (vercelHost) {
+    const host = vercelHost.replace(/\/$/, "");
+    return host.startsWith("http") ? host : `https://${host}`;
+  }
+
+  return "http://localhost:3000";
+}
+
 export const siteConfig = {
   name: "豆花慢跑",
   nameEn: "Tofu Run",
@@ -7,9 +22,7 @@ export const siteConfig = {
   city: "高雄",
   country: "TW",
   locale: "zh_TW",
-  url:
-    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ??
-    "http://localhost:3000",
+  url: getSiteUrl(),
   creator: "豆花慢跑",
   keywords: [
     "豆花慢跑",
